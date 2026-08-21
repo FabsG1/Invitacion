@@ -4,8 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>¡Una invitación especial! 🕷️🥡</title>
+    <!-- Librería de Confeti -->
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;800&display=swap');
+
+        * {
+            box-sizing: border-box;
+        }
 
         body {
             margin: 0;
@@ -14,9 +20,9 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            background-color: #f0f4f8;
+            background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%);
             font-family: 'Nunito', sans-serif;
-            overflow: hidden; /* Para que el botón no genere scroll al escapar */
+            overflow: hidden;
         }
 
         /* Contenedor principal estilo Ticket */
@@ -24,109 +30,133 @@
             position: relative;
             background: #ffffff;
             width: 350px;
-            padding: 30px;
+            height: 500px; /* Altura fija para mantener la forma */
+            padding: 30px 20px;
             border-radius: 20px;
             box-shadow: 
                 0 20px 40px rgba(0,0,0,0.1),
-                inset -5px -5px 15px rgba(0,0,0,0.05), /* Toque de plastilina al ticket */
+                inset -5px -5px 15px rgba(0,0,0,0.05),
                 inset 5px 5px 15px rgba(255,255,255,1);
             border: 3px dashed #e74c3c;
             text-align: center;
             z-index: 10;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
         }
 
-        /* Efecto de recortes del ticket (circulos a los lados) */
+        /* Recortes del ticket */
         .ticket::before, .ticket::after {
             content: '';
             position: absolute;
             top: 50%;
             width: 40px;
             height: 40px;
-            background-color: #f0f4f8;
+            background: linear-gradient(135deg, #e0eafc 0%, #cfdef3 100%); /* Mismo que el fondo */
             border-radius: 50%;
             transform: translateY(-50%);
+            z-index: 20;
         }
-        .ticket::before { left: -20px; border-right: 3px dashed #e74c3c; }
-        .ticket::after { right: -20px; border-left: 3px dashed #e74c3c; }
+        .ticket::before { left: -25px; border-right: 3px dashed #e74c3c; }
+        .ticket::after { right: -25px; border-left: 3px dashed #e74c3c; }
 
-        h1 {
+        /* Sistema de pantallas */
+        .screen {
+            display: none; /* Ocultas por defecto */
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100%;
+            animation: fadeIn 0.5s ease;
+        }
+        .screen.active {
+            display: flex; /* Solo la activa se muestra */
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        h1, h2 {
             font-family: 'Fredoka One', cursive;
-            color: #2980b9; /* Azul Spiderman */
-            font-size: 28px;
-            margin-bottom: 5px;
+            color: #2980b9;
+            margin-bottom: 10px;
             text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
         }
 
-        .details {
-            margin: 20px 0;
+        /* Área con Scroll para los detalles */
+        .scroll-area {
             background: #fdf2e9;
             padding: 15px;
             border-radius: 15px;
             color: #34495e;
-            /* Efecto plastilina en los detalles */
+            width: 100%;
+            max-height: 250px;
+            overflow-y: auto; /* Activa el scroll vertical si el texto es muy largo */
             box-shadow: 
                 inset -3px -3px 8px rgba(231, 76, 60, 0.2), 
                 inset 3px 3px 8px rgba(255,255,255, 0.8);
-        }
-
-        .details p {
-            margin: 8px 0;
-            font-size: 16px;
-        }
-
-        .details span {
-            font-weight: 800;
-            color: #c0392b; /* Rojo oscuro */
-        }
-
-        .question {
-            font-family: 'Fredoka One', cursive;
-            font-size: 24px;
-            color: #2c3e50;
             margin-bottom: 20px;
+            text-align: left;
         }
 
-        /* Estilo Claymorphism (Plastilina) para los botones */
-        .btn-container {
-            position: relative;
-            height: 60px;
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-        }
+        /* Estilizar la barra de scroll */
+        .scroll-area::-webkit-scrollbar { width: 8px; }
+        .scroll-area::-webkit-scrollbar-track { background: #f1f1f1; border-radius: 10px; }
+        .scroll-area::-webkit-scrollbar-thumb { background: #e74c3c; border-radius: 10px; }
 
+        .scroll-area p { margin: 10px 0; font-size: 15px; }
+        .scroll-area span { font-weight: 800; color: #c0392b; }
+
+        /* Botones estilo plastilina */
         button {
             font-family: 'Fredoka One', cursive;
-            font-size: 18px;
+            font-size: 16px;
             border: none;
-            padding: 10px 30px;
+            padding: 12px 25px;
             border-radius: 25px;
             cursor: pointer;
             color: white;
-            transition: transform 0.1s ease;
+            transition: transform 0.1s ease, background-color 0.3s;
+            margin: 5px;
         }
+        button:active { transform: scale(0.95); }
 
-        /* Botón SÍ - Azul */
-        .btn-yes {
+        .btn-nav {
+            background-color: #95a5a6;
+            box-shadow: -3px -3px 8px rgba(255,255,255,0.5) inset, 3px 3px 8px rgba(0,0,0,0.2) inset;
+            color: #fff;
+        }
+        .btn-primary {
             background-color: #3498db;
-            box-shadow: 
-                -4px -4px 10px rgba(255,255,255,0.5) inset,
-                4px 4px 10px rgba(0,0,0,0.2) inset,
-                2px 2px 5px rgba(0,0,0,0.2);
+            box-shadow: -3px -3px 8px rgba(255,255,255,0.5) inset, 3px 3px 8px rgba(0,0,0,0.2) inset;
         }
-        .btn-yes:active { transform: scale(0.95); }
-
-        /* Botón NO - Rojo */
-        .btn-no {
+        .btn-danger {
             background-color: #e74c3c;
-            position: absolute; /* Vital para que se mueva libremente */
-            box-shadow: 
-                -4px -4px 10px rgba(255,255,255,0.5) inset,
-                4px 4px 10px rgba(0,0,0,0.2) inset,
-                2px 2px 5px rgba(0,0,0,0.2);
+            box-shadow: -3px -3px 8px rgba(255,255,255,0.5) inset, 3px 3px 8px rgba(0,0,0,0.2) inset;
         }
 
-        /* Pantalla de éxito oculta inicialmente */
+        /* Mensaje de error (Upsss) */
+        #ups-message {
+            display: none;
+            color: #e74c3c;
+            font-weight: 800;
+            background: #fadbd8;
+            padding: 10px;
+            border-radius: 10px;
+            margin-top: 15px;
+            animation: shake 0.4s ease;
+        }
+
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            50% { transform: translateX(5px); }
+            75% { transform: translateX(-5px); }
+        }
+
+        /* Pantalla de éxito */
         #success-screen {
             display: none;
             position: absolute;
@@ -138,74 +168,120 @@
             z-index: 100;
             text-align: center;
         }
-        #success-screen h1 { font-size: 40px; color: #e74c3c; }
-        
-        .floating-icons { font-size: 40px; }
+        #success-screen h1 { font-size: 35px; color: #e74c3c; padding: 20px; }
+        .floating-icons { font-size: 50px; }
+
     </style>
 </head>
 <body>
 
     <div class="ticket" id="ticket">
-        <h1>¡Cita Arácnida! 🕸️</h1>
-        <p>Un evento multiversal exclusivo</p>
         
-        <div class="details">
-            <p>📅 <span>Día:</span> [Ingresa el Día]</p>
-            <p>⏰ <span>Hora:</span> [Ingresa la Hora]</p>
-            <p>🥢 <span>Plan:</span> Auténtica Comida China y columpiarnos por la ciudad (o ver películas).</p>
+        <!-- PANTALLA 1: Inicio -->
+        <div class="screen active" id="screen-1">
+            <h1>¡Hola! 👋</h1>
+            <p style="font-size: 80px; margin: 10px 0;">🕷️</p>
+            <p style="font-weight: 800; color: #34495e;">Tienes una invitación pendiente...</p>
+            <button class="btn-primary" onclick="goToScreen(2)">Abrir invitación</button>
         </div>
 
-        <div class="question">¿Aceptas el plan? 🥡🕷️</div>
-        
-        <div class="btn-container">
-            <button class="btn-yes" id="btnYes">¡SÍ!</button>
-            <!-- El botón NO tiene posiciones iniciales relativas a su contenedor -->
-            <button class="btn-no" id="btnNo" style="right: 35px;">No</button> 
+        <!-- PANTALLA 2: Detalles (Con Scroll) -->
+        <div class="screen" id="screen-2">
+            <h2>El Plan Arácnido</h2>
+            <div class="scroll-area">
+                <p>He estado planeando algo especial y no podía faltar mi persona favorita.</p>
+                <p>📅 <span>Día:</span> [Ingresa el Día]</p>
+                <p>⏰ <span>Hora:</span> [Ingresa la Hora]</p>
+                <p>📍 <span>Lugar:</span> [Ingresa el Lugar]</p>
+                <p>🥡 <span>Menú:</span> Auténtica comida china. Yo pongo los palillos chinos y la buena actitud.</p>
+                <p>🕸️ <span>Misión:</span> Relajarnos, comer rico, ver películas o columpiarnos por la ciudad. ¡Tú decides!</p>
+                <p><i>(Nota: Puedes agregar todo el texto que quieras aquí, la cajita hará scroll hacia abajo de forma automática).</i></p>
+            </div>
+            <div style="display: flex; gap: 10px;">
+                <button class="btn-nav" onclick="goToScreen(1)">Atrás</button>
+                <button class="btn-primary" onclick="goToScreen(3)">Siguiente</button>
+            </div>
         </div>
+
+        <!-- PANTALLA 3: La Pregunta -->
+        <div class="screen" id="screen-3">
+            <h2>¿Aceptas la cita? 🥢</h2>
+            <div style="display: flex; gap: 15px; margin-top: 20px;">
+                <button class="btn-primary" id="btnYes" style="font-size: 20px; padding: 15px 35px;">¡SÍ!</button>
+                <button class="btn-danger" id="btnNo">No</button>
+            </div>
+            <div id="ups-message">Upsss... no puedes elegir esa opción 👀🕷️</div>
+            <button class="btn-nav" style="margin-top: auto; font-size: 12px;" onclick="goToScreen(2)">Atrás</button>
+        </div>
+
     </div>
 
-    <!-- Pantalla al decir que sí -->
+    <!-- PANTALLA 4: Éxito -->
     <div id="success-screen">
-        <h1>¡Sabía que dirías que sí! ❤️🕷️</h1>
-        <p class="floating-icons">🥡 🥢 🕸️ 🕷️ 🥠</p>
-        <h2>Prepárate para la mejor cita.</h2>
+        <h1>¡Sabía que dirías que sí! ❤️</h1>
+        <p class="floating-icons">🥡 🥢 🕸️ 🕷️</p>
+        <h2 style="color: #34495e;">¡Nos vemos pronto!</h2>
     </div>
 
     <script>
+        // Lógica para navegar entre las pantallas del ticket
+        function goToScreen(screenNumber) {
+            // Oculta todas las pantallas
+            document.querySelectorAll('.screen').forEach(screen => {
+                screen.classList.remove('active');
+            });
+            // Muestra la pantalla solicitada
+            document.getElementById(`screen-${screenNumber}`).classList.add('active');
+        }
+
+        // Lógica del Botón NO
         const btnNo = document.getElementById('btnNo');
-        const btnYes = document.getElementById('btnYes');
-        const successScreen = document.getElementById('success-screen');
-        const ticket = document.getElementById('ticket');
+        const upsMessage = document.getElementById('ups-message');
 
-        // Función para mover el botón NO
-        const moveButton = () => {
-            // Calculamos dimensiones de la ventana y del botón
-            const windowWidth = window.innerWidth;
-            const windowHeight = window.innerHeight;
-            const btnWidth = btnNo.offsetWidth;
-            const btnHeight = btnNo.offsetHeight;
-
-            // Generamos posiciones aleatorias asegurando que no se salga de la pantalla
-            const randomX = Math.floor(Math.random() * (windowWidth - btnWidth));
-            const randomY = Math.floor(Math.random() * (windowHeight - btnHeight));
-
-            // Cambiamos a posición fija (fixed) para que se mueva por toda la pantalla
-            btnNo.style.position = 'fixed';
-            btnNo.style.left = `${randomX}px`;
-            btnNo.style.top = `${randomY}px`;
-        };
-
-        // Eventos para desktop y mobile
-        btnNo.addEventListener('mouseover', moveButton);
-        btnNo.addEventListener('touchstart', (e) => {
-            e.preventDefault(); // Evita que se dispare el click en móviles
-            moveButton();
+        btnNo.addEventListener('click', () => {
+            btnNo.style.display = 'none'; // Oculta el botón NO
+            upsMessage.style.display = 'block'; // Muestra el mensaje de "Upsss"
         });
 
-        // Evento para el botón SÍ
+        // Lógica del Botón SÍ con Confeti
+        const btnYes = document.getElementById('btnYes');
+        const ticket = document.getElementById('ticket');
+        const successScreen = document.getElementById('success-screen');
+
         btnYes.addEventListener('click', () => {
+            // Ocultar el ticket y mostrar pantalla final
             ticket.style.display = 'none';
             successScreen.style.display = 'flex';
+
+            // Lanzar el confeti con colores de Spiderman
+            var duration = 3 * 1000;
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 1000 };
+
+            function randomInRange(min, max) {
+                return Math.random() * (max - min) + min;
+            }
+
+            var interval = setInterval(function() {
+                var timeLeft = animationEnd - Date.now();
+
+                if (timeLeft <= 0) {
+                    return clearInterval(interval);
+                }
+
+                var particleCount = 50 * (timeLeft / duration);
+                // Colores: Rojo Spiderman, Azul Spiderman, Dorado, Blanco
+                confetti(Object.assign({}, defaults, { 
+                    particleCount, 
+                    colors: ['#e74c3c', '#2980b9', '#f1c40f', '#ffffff'],
+                    origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } 
+                }));
+                confetti(Object.assign({}, defaults, { 
+                    particleCount, 
+                    colors: ['#e74c3c', '#2980b9', '#f1c40f', '#ffffff'],
+                    origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } 
+                }));
+            }, 250);
         });
     </script>
 </body>
