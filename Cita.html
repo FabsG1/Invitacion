@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>VIP Access | Cita Especial</title>
     
+    <!-- Ícono para la pestaña del navegador (Favicon) -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎟️</text></svg>">
+    
     <!-- Librería de Confeti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
@@ -17,7 +20,7 @@
     <style>
         :root {
             /* Paleta Monocromática Rosa Romántico */
-            --primary: #ff5c8a; /* Rosa vibrante */
+            --primary: #ff5c8ae1; /* Rosa vibrante */
             --primary-dark: #c9184a; /* Cereza oscuro para hover */
             --text-main: #590d22; /* Texto principal oscuro pero en tono rosa/vino */
             --text-muted: #800f2f; /* Texto secundario */
@@ -304,10 +307,10 @@
                 <div class="main-icon">
                     <i class="fa-solid fa-envelope-open-heart"></i>
                 </div>
-                <h1>Para ti</h1>
+                <h1>Para Fer</h1>
                 <div class="subtitle">Entrega Especial</div>
                 <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 30px; line-height: 1.6;">
-                    Tienes una invitación oficial esperando ser abierta. Cero compromisos, cien por ciento buena compañía.
+                    Tienes una invitación esperando ser abierta. Disfrutarla juntos es mejor.
                 </p>
                 <div class="btn-group">
                     <button class="btn-primary" onclick="goToScreen(2)">
@@ -318,22 +321,22 @@
 
             <!-- PANTALLA 2: EL TICKET / RECIBO -->
             <div class="screen" id="screen-2">
-                <h1>ADMIT ONE</h1>
+                <h1>INVITACIÓN</h1>
                 <div class="subtitle"><i class="fa-solid fa-ticket"></i> Pase Exclusivo</div>
                 
                 <div class="receipt-box">
                     <div class="receipt-row">
-                        <span>FECHA:</span> <strong>[Día de la semana]</strong>
+                        <span>FECHA:</span> <strong>Martes, 25 de Agosto</strong>
                     </div>
                     <div class="receipt-row">
-                        <span>HORA:</span> <strong>[00:00 PM]</strong>
+                        <span>HORA:</span> <strong>1:00 PM</strong>
                     </div>
                     <div class="receipt-row">
-                        <span>LUGAR:</span> <strong>[El lugar elegido]</strong>
+                        <span>LUGAR:</span> <strong>Galerías Serdán</strong>
                     </div>
                     <div class="receipt-desc">
                         <i class="fa-solid fa-utensils" style="color: var(--primary);"></i> <strong>El Plan:</strong><br>
-                        Auténtica comida china, platicar sin prisa y pasar una excelente tarde juntos.
+                        Cine, comida china, Figuritas, Risas, platica y una excelente tarde juntos.
                     </div>
                 </div>
 
@@ -356,7 +359,7 @@
                 </div>
 
                 <div class="error-msg" id="errorMsg">
-                    <i class="fa-solid fa-face-kiss-wink-heart"></i> ¡Ups! El sistema requiere que presiones "SÍ".
+                    <i class="fa-solid fa-face-kiss-wink-heart"></i> ¡Ups! Se requiere que presiones "SÍ, ME ENCANTARÍA".
                 </div>
 
                 <button class="btn-secondary" style="margin-top: 15px;" onclick="goToScreen(2)">
@@ -382,7 +385,7 @@
 
         <!-- CÓDIGO DE BARRAS INFERIOR -->
         <div class="ticket-bottom">
-            <p class="barcode">DATE-NIGHT-2026</p>
+            <p class="barcode">DATE-01-25/08/2026</p>
             <p style="font-size: 10px; color: var(--text-muted); font-weight: 600; margin-top: 5px; letter-spacing: 2px;">TICKET NO. 00001</p>
         </div>
     </div>
