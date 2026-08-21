@@ -3,18 +3,27 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VIP Access | Cita Arácnida</title>
+    <title>VIP Access | Cita Especial</title>
     
     <!-- Librería de Confeti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
-    <!-- Google Fonts: Poppins (General), Bebas Neue (Títulos), Courier (Detalles), Barcode (Código de barras) -->
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Courier+Prime:wght@400;700&family=Libre+Barcode+128+Text&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
+    <!-- Google Fonts: Poppins (General), Playfair Display (Títulos elegantes), Courier (Detalles), Barcode (Código de barras) -->
+    <link href="https://fonts.googleapis.com/css2?family=Courier+Prime:wght@400;700&family=Libre+Barcode+128+Text&family=Playfair+Display:ital,wght@0,700;1,700&family=Poppins:wght@300;400;600;800&display=swap" rel="stylesheet">
     
     <!-- FontAwesome para Íconos Pro -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
+        :root {
+            --primary: #d97777; /* Rosa cálido / Terracota suave */
+            --primary-dark: #b85c5c;
+            --text-main: #2d3748;
+            --text-muted: #718096;
+            --bg-page: linear-gradient(135deg, #fdfbfb 0%, #ebedee 100%);
+            --ticket-bg: #ffffff;
+        }
+
         * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
@@ -22,52 +31,53 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            /* Fondo oscuro elegante inspirado en el traje de Spiderman */
-            background: radial-gradient(circle at center, #2b3252 0%, #111424 100%);
+            background: var(--bg-page);
             font-family: 'Poppins', sans-serif;
             overflow: hidden;
+            color: var(--text-main);
         }
 
         /* SOMBRA Y CONTENEDOR DEL TICKET */
         .ticket-wrapper {
-            filter: drop-shadow(0 20px 30px rgba(0,0,0,0.6));
+            filter: drop-shadow(0 15px 35px rgba(0,0,0,0.08));
             width: 340px;
         }
 
         /* ESTRUCTURA DEL TICKET */
         .ticket-top {
-            background: #fdfdfd;
-            border-radius: 12px 12px 0 0;
+            background: var(--ticket-bg);
+            border-radius: 16px 16px 0 0;
             padding: 35px 25px 25px 25px;
             position: relative;
-            height: 420px; /* Altura fija para la navegación */
+            height: 440px;
             display: flex;
             flex-direction: column;
         }
 
-        /* LÍNEA PUNTEADA Y CORTES DEL TICKET (El efecto de boleto) */
+        /* LÍNEA PUNTEADA Y CORTES DEL TICKET */
         .ticket-divider {
-            background: #fdfdfd;
+            background: var(--ticket-bg);
             height: 2px;
             position: relative;
-            border-bottom: 3px dashed #cbd5e1;
+            border-bottom: 3px dashed #e2e8f0;
         }
         .ticket-divider::before, .ticket-divider::after {
             content: '';
             position: absolute;
-            top: -12px; /* Centrado en la línea */
+            top: -12px;
             width: 26px;
             height: 26px;
-            background: #111424; /* Mismo color del fondo del body */
+            background: #ebedee; /* Ajustado al color de fondo */
             border-radius: 50%;
+            box-shadow: inset 0 3px 5px rgba(0,0,0,0.02);
         }
         .ticket-divider::before { left: -13px; }
         .ticket-divider::after { right: -13px; }
 
         .ticket-bottom {
-            background: #fdfdfd;
-            border-radius: 0 0 12px 12px;
-            padding: 15px;
+            background: var(--ticket-bg);
+            border-radius: 0 0 16px 16px;
+            padding: 20px;
             text-align: center;
         }
 
@@ -78,76 +88,82 @@
             align-items: center;
             text-align: center;
             height: 100%;
-            animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            animation: fadeIn 0.5s ease-out;
         }
         .screen.active { display: flex; }
 
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateY(20px); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         /* TIPOGRAFÍAS Y ESTILOS */
         h1 {
-            font-family: 'Bebas Neue', sans-serif;
-            color: #e23636;
-            font-size: 38px;
-            letter-spacing: 2px;
+            font-family: 'Playfair Display', serif;
+            color: var(--primary);
+            font-size: 32px;
             margin-bottom: 5px;
-            line-height: 1;
+            line-height: 1.2;
         }
         .subtitle {
-            color: #64748b;
-            font-size: 13px;
+            color: var(--text-muted);
+            font-size: 12px;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             margin-bottom: 20px;
         }
 
-        /* ICONO DE SOBRE ANIMADO */
-        .envelope-icon {
-            font-size: 65px;
-            color: #2980b9;
-            margin: 30px 0;
-            animation: float 3s ease-in-out infinite;
-        }
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-10px); }
+        /* ICONO PRINCIPAL */
+        .main-icon {
+            font-size: 55px;
+            color: var(--primary);
+            margin: 25px 0;
+            background: #fff5f5;
+            width: 100px;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 50%;
+            box-shadow: 0 8px 20px rgba(217, 119, 119, 0.15);
         }
 
-        /* ZONA DE DETALLES (ESTILO RECIBO) */
+        /* ZONA DE DETALLES (ESTILO RECIBO CLÁSICO) */
         .receipt-box {
             font-family: 'Courier Prime', monospace;
-            background: #f8fafc;
-            border: 1px solid #e2e8f0;
-            padding: 15px;
+            background: #fcfcfc;
+            border: 1px solid #edf2f7;
+            padding: 18px;
             width: 100%;
-            border-radius: 8px;
+            border-radius: 12px;
             text-align: left;
             margin-bottom: 20px;
             flex-grow: 1;
             overflow-y: auto;
         }
-        .receipt-box::-webkit-scrollbar { width: 6px; }
-        .receipt-box::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+        .receipt-box::-webkit-scrollbar { width: 4px; }
+        .receipt-box::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 4px; }
 
         .receipt-row {
             display: flex;
             justify-content: space-between;
-            margin-bottom: 10px;
+            margin-bottom: 12px;
             font-size: 14px;
-            color: #334155;
-            border-bottom: 1px dotted #cbd5e1;
-            padding-bottom: 4px;
+            border-bottom: 1px dashed #e2e8f0;
+            padding-bottom: 6px;
         }
-        .receipt-row strong { color: #0f172a; }
+        .receipt-row strong { color: var(--text-main); font-weight: 700; }
+        
         .receipt-desc {
             font-size: 13px;
-            color: #475569;
-            margin-top: 10px;
-            line-height: 1.5;
+            color: var(--text-muted);
+            margin-top: 15px;
+            line-height: 1.6;
+            font-family: 'Poppins', sans-serif;
+            background: #f7fafc;
+            padding: 12px;
+            border-radius: 8px;
         }
 
         /* BOTONES PREMIUM */
@@ -157,8 +173,8 @@
             font-family: 'Poppins', sans-serif;
             font-weight: 600;
             border: none;
-            padding: 12px;
-            border-radius: 8px;
+            padding: 14px;
+            border-radius: 10px;
             cursor: pointer;
             transition: all 0.2s ease;
             display: flex;
@@ -168,32 +184,37 @@
             width: 100%;
             font-size: 14px;
         }
-        button:active { transform: scale(0.95); }
+        button:active { transform: scale(0.96); }
 
         .btn-primary {
-            background: #e23636;
+            background: var(--primary);
             color: white;
-            box-shadow: 0 4px 15px rgba(226, 54, 54, 0.3);
+            box-shadow: 0 4px 15px rgba(217, 119, 119, 0.3);
         }
-        .btn-primary:hover { background: #c0392b; }
+        .btn-primary:hover { background: var(--primary-dark); }
 
         .btn-secondary {
-            background: #f1f5f9;
-            color: #475569;
+            background: #edf2f7;
+            color: var(--text-muted);
         }
         
         .btn-yes {
-            background: #2980b9;
+            background: var(--primary);
             color: white;
             font-size: 16px;
-            padding: 15px;
-            box-shadow: 0 4px 15px rgba(41, 128, 185, 0.4);
+            box-shadow: 0 4px 15px rgba(217, 119, 119, 0.3);
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(217, 119, 119, 0.4); }
+            70% { box-shadow: 0 0 0 10px rgba(217, 119, 119, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(217, 119, 119, 0); }
         }
 
         .btn-no {
             background: transparent;
-            color: #94a3b8;
-            border: 1px solid #cbd5e1;
+            color: #a0aec0;
+            border: 1px solid #e2e8f0;
         }
 
         /* ANIMACIÓN DE DESAPARICIÓN DEL BOTÓN NO */
@@ -202,31 +223,30 @@
             pointer-events: none;
         }
         @keyframes popOut {
-            50% { transform: scale(1.1); }
+            40% { transform: scale(1.05); }
             100% { transform: scale(0); opacity: 0; width: 0; padding: 0; border: none; margin: 0; }
         }
 
-        /* MENSAJE DE ERROR CUTE */
+        /* MENSAJE DE ERROR */
         .error-msg {
             display: none;
-            color: #e23636;
-            background: #fef2f2;
-            border: 1px solid #fecaca;
-            padding: 10px;
+            color: #c53030;
+            background: #fff5f5;
+            padding: 12px;
             border-radius: 8px;
-            font-size: 12px;
-            font-weight: 600;
+            font-size: 12.5px;
+            font-weight: 500;
             width: 100%;
             margin-top: 10px;
             animation: fadeInMsg 0.4s ease;
         }
-        @keyframes fadeInMsg { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInMsg { from { opacity: 0; transform: translateY(-5px); } to { opacity: 1; transform: translateY(0); } }
 
         /* CÓDIGO DE BARRAS */
         .barcode {
             font-family: 'Libre Barcode 128 Text', cursive;
-            font-size: 45px;
-            color: #1e293b;
+            font-size: 48px;
+            color: var(--text-main);
             line-height: 1;
         }
 
@@ -235,25 +255,33 @@
             display: none;
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(253, 253, 253, 0.95);
+            background: rgba(255, 255, 255, 0.98);
             z-index: 100;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            border-radius: 12px;
+            border-radius: 16px;
             text-align: center;
             padding: 20px;
+            animation: fadeIn 0.4s ease;
         }
         .success-overlay h2 {
-            font-family: 'Bebas Neue', sans-serif;
-            font-size: 40px;
-            color: #2980b9;
+            font-family: 'Playfair Display', serif;
+            font-size: 36px;
+            color: var(--primary);
             margin-bottom: 15px;
         }
+        .success-icons {
+            display: flex;
+            gap: 15px;
+            margin: 20px 0;
+        }
         .success-icons i {
-            font-size: 30px;
-            color: #e23636;
-            margin: 0 5px;
+            font-size: 35px;
+            color: var(--text-main);
+            background: #f7fafc;
+            padding: 15px;
+            border-radius: 50%;
         }
     </style>
 </head>
@@ -262,17 +290,19 @@
     <div class="ticket-wrapper">
         <div class="ticket-top">
             
-            <!-- PANTALLA 1: EL SOBRE -->
+            <!-- PANTALLA 1: INICIO -->
             <div class="screen active" id="screen-1">
-                <i class="fa-solid fa-envelope-open-text envelope-icon"></i>
-                <h1>ENTREGA ESPECIAL</h1>
-                <div class="subtitle">Clasificación: Multiversal</div>
-                <p style="color: #64748b; font-size: 14px; margin-bottom: 30px;">
-                    Se ha interceptado un mensaje en tu línea temporal. Requiere decodificación inmediata.
+                <div class="main-icon">
+                    <i class="fa-solid fa-envelope-open-heart"></i>
+                </div>
+                <h1>Para ti</h1>
+                <div class="subtitle">Entrega Especial</div>
+                <p style="color: var(--text-muted); font-size: 14px; margin-bottom: 30px; line-height: 1.6;">
+                    Tienes una invitación oficial esperando ser abierta. Cero compromisos, cien por ciento buena compañía.
                 </p>
                 <div class="btn-group">
                     <button class="btn-primary" onclick="goToScreen(2)">
-                        <i class="fa-solid fa-unlock-keyhole"></i> Decodificar Mensaje
+                        Abrir Invitación
                     </button>
                 </div>
             </div>
@@ -280,61 +310,60 @@
             <!-- PANTALLA 2: EL TICKET / RECIBO -->
             <div class="screen" id="screen-2">
                 <h1>ADMIT ONE</h1>
-                <div class="subtitle"><i class="fa-solid fa-ticket"></i> Pase VIP Exclusivo</div>
+                <div class="subtitle"><i class="fa-solid fa-ticket"></i> Pase Exclusivo</div>
                 
                 <div class="receipt-box">
                     <div class="receipt-row">
-                        <span>FECHA:</span> <strong>[Día, Ej: Vie 25 Oct]</strong>
+                        <span>FECHA:</span> <strong>[Día de la semana]</strong>
                     </div>
                     <div class="receipt-row">
-                        <span>HORA:</span> <strong>[08:00 PM]</strong>
+                        <span>HORA:</span> <strong>[00:00 PM]</strong>
                     </div>
                     <div class="receipt-row">
-                        <span>LUGAR:</span> <strong>[Tu Ciudad]</strong>
+                        <span>LUGAR:</span> <strong>[El lugar elegido]</strong>
                     </div>
                     <div class="receipt-desc">
-                        <i class="fa-solid fa-bowl-food" style="color: #e23636;"></i> <strong>MENÚ:</strong> Auténtica comida china (Rollitos, fideos y galletas de la fortuna).<br><br>
-                        <i class="fa-solid fa-spider" style="color: #2980b9;"></i> <strong>MISIÓN:</strong> Ver películas, hablar de cosas geek y pasar el mejor rato posible.
+                        <i class="fa-solid fa-utensils" style="color: var(--primary);"></i> <strong>El Plan:</strong><br>
+                        Auténtica comida china, platicar sin prisa y pasar una excelente tarde juntos.
                     </div>
                 </div>
 
                 <div class="btn-group">
-                    <button class="btn-secondary" onclick="goToScreen(1)"><i class="fa-solid fa-arrow-left"></i> Atrás</button>
+                    <button class="btn-secondary" onclick="goToScreen(1)"><i class="fa-solid fa-arrow-left"></i></button>
                     <button class="btn-primary" onclick="goToScreen(3)">Continuar <i class="fa-solid fa-arrow-right"></i></button>
                 </div>
             </div>
 
             <!-- PANTALLA 3: LA PREGUNTA -->
             <div class="screen" id="screen-3">
-                <h1 style="font-size: 32px; color: #1e293b;">CONFIRMAR ASISTENCIA</h1>
-                <div class="subtitle">El destino del multiverso depende de ti</div>
+                <h1 style="font-size: 28px; font-family: 'Poppins', sans-serif; font-weight: 800; color: var(--text-main); margin-top: 20px;">¿Aceptas el plan?</h1>
+                <div class="subtitle" style="margin-bottom: 30px;">La decisión es tuya</div>
                 
-                <i class="fa-solid fa-heart-circle-check" style="font-size: 50px; color: #e23636; margin: 20px 0;"></i>
+                <i class="fa-solid fa-heart-circle-check" style="font-size: 55px; color: var(--primary); margin-bottom: 30px;"></i>
 
-                <div style="width: 100%; display: flex; gap: 10px; margin-top: auto; transition: all 0.3s;">
-                    <button class="btn-yes" id="btnYes"><i class="fa-solid fa-check"></i> SÍ, ACEPTO</button>
-                    <button class="btn-no" id="btnNo"><i class="fa-solid fa-xmark"></i> NO</button>
+                <div style="width: 100%; display: flex; gap: 10px; margin-top: auto;">
+                    <button class="btn-yes" id="btnYes">SÍ, ME ENCANTARÍA</button>
+                    <button class="btn-no" id="btnNo">No</button>
                 </div>
 
                 <div class="error-msg" id="errorMsg">
-                    <i class="fa-solid fa-triangle-exclamation"></i> Anomalía detectada: Esa opción rompería el evento canónico. Intenta de nuevo.
+                    <i class="fa-solid fa-bug"></i> Error 404: Excusas no encontradas. El sistema requiere que presiones "SÍ".
                 </div>
 
                 <button class="btn-secondary" style="margin-top: 15px;" onclick="goToScreen(2)">
-                    <i class="fa-solid fa-arrow-rotate-left"></i> Revisar Detalles
+                    Volver a los detalles
                 </button>
             </div>
 
-            <!-- PANTALLA FINAL DE ÉXITO (Se superpone a todo el ticket top) -->
+            <!-- PANTALLA FINAL DE ÉXITO -->
             <div class="success-overlay" id="success-screen">
-                <h2>¡RESERVA CONFIRMADA!</h2>
+                <h2>¡Plan Confirmado!</h2>
                 <div class="success-icons">
                     <i class="fa-solid fa-bowl-rice"></i>
-                    <i class="fa-solid fa-spider"></i>
-                    <i class="fa-solid fa-ticket"></i>
+                    <i class="fa-solid fa-calendar-check"></i>
                 </div>
-                <p style="color: #475569; font-weight: 600; margin-top: 15px;">
-                    Prepara tu mejor outfit arácnido.<br>¡Nos vemos en la cita!
+                <p style="color: var(--text-muted); font-weight: 500; margin-top: 10px; font-size: 15px;">
+                    Todo está listo.<br>¡Nos vemos muy pronto!
                 </p>
             </div>
 
@@ -344,43 +373,36 @@
 
         <!-- CÓDIGO DE BARRAS INFERIOR -->
         <div class="ticket-bottom">
-            <p class="barcode">SPIDER-DATE-2026</p>
-            <p style="font-size: 9px; color: #94a3b8; font-weight: 600; margin-top: -5px; letter-spacing: 1px;">ID: 0910-MULTIVERSO-TICKET</p>
+            <p class="barcode">DATE-NIGHT-2026</p>
+            <p style="font-size: 10px; color: #a0aec0; font-weight: 600; margin-top: 5px; letter-spacing: 2px;">TICKET NO. 00001</p>
         </div>
     </div>
 
     <script>
-        // Navegación de pantallas
         function goToScreen(num) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.getElementById('screen-' + num).classList.add('active');
         }
 
-        // Animación del botón NO
         const btnNo = document.getElementById('btnNo');
         const errorMsg = document.getElementById('errorMsg');
 
         btnNo.addEventListener('click', () => {
-            // Añade la clase de implosión al botón NO
             btnNo.classList.add('implode');
-            // Muestra el mensaje de error temático de Spiderman (Evento canónico)
             setTimeout(() => {
                 errorMsg.style.display = 'block';
-            }, 300); // Aparece justo después de que se encoge el botón
+            }, 250); 
         });
 
-        // Evento botón SÍ y Confeti
         const btnYes = document.getElementById('btnYes');
         const successScreen = document.getElementById('success-screen');
 
         btnYes.addEventListener('click', () => {
-            // Mostrar overlay de éxito
             successScreen.style.display = 'flex';
 
-            // Configuración del confeti
             var duration = 3 * 1000;
             var animationEnd = Date.now() + duration;
-            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 1000 };
+            var defaults = { startVelocity: 25, spread: 360, ticks: 60, zIndex: 1000 };
 
             function randomInRange(min, max) { return Math.random() * (max - min) + min; }
 
@@ -390,15 +412,15 @@
 
                 var particleCount = 50 * (timeLeft / duration);
                 
-                // Colores: Rojo Spidey, Azul Spidey, Dorado (por la comida china/magia)
+                // Colores románticos y elegantes (Oro rosa, terracota, blanco)
                 confetti(Object.assign({}, defaults, { 
                     particleCount, 
-                    colors: ['#e23636', '#2980b9', '#f1c40f'],
+                    colors: ['#d97777', '#f6ad55', '#ffffff', '#fed7d7'],
                     origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } 
                 }));
                 confetti(Object.assign({}, defaults, { 
                     particleCount, 
-                    colors: ['#e23636', '#2980b9', '#f1c40f'],
+                    colors: ['#d97777', '#f6ad55', '#ffffff', '#fed7d7'],
                     origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } 
                 }));
             }, 250);
