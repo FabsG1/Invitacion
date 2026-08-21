@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Una invitación especial! 🕷️🥡</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;800&display=swap');
+
+        body {
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: #f0f4f8;
+            font-family: 'Nunito', sans-serif;
+            overflow: hidden; /* Para que el botón no genere scroll al escapar */
+        }
+
+        /* Contenedor principal estilo Ticket */
+        .ticket {
+            position: relative;
+            background: #ffffff;
+            width: 350px;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: 
+                0 20px 40px rgba(0,0,0,0.1),
+                inset -5px -5px 15px rgba(0,0,0,0.05), /* Toque de plastilina al ticket */
+                inset 5px 5px 15px rgba(255,255,255,1);
+            border: 3px dashed #e74c3c;
+            text-align: center;
+            z-index: 10;
+        }
+
+        /* Efecto de recortes del ticket (circulos a los lados) */
+        .ticket::before, .ticket::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            width: 40px;
+            height: 40px;
+            background-color: #f0f4f8;
+            border-radius: 50%;
+            transform: translateY(-50%);
+        }
+        .ticket::before { left: -20px; border-right: 3px dashed #e74c3c; }
+        .ticket::after { right: -20px; border-left: 3px dashed #e74c3c; }
+
+        h1 {
+            font-family: 'Fredoka One', cursive;
+            color: #2980b9; /* Azul Spiderman */
+            font-size: 28px;
+            margin-bottom: 5px;
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+        }
+
+        .details {
+            margin: 20px 0;
+            background: #fdf2e9;
+            padding: 15px;
+            border-radius: 15px;
+            color: #34495e;
+            /* Efecto plastilina en los detalles */
+            box-shadow: 
+                inset -3px -3px 8px rgba(231, 76, 60, 0.2), 
+                inset 3px 3px 8px rgba(255,255,255, 0.8);
+        }
+
+        .details p {
+            margin: 8px 0;
+            font-size: 16px;
+        }
+
+        .details span {
+            font-weight: 800;
+            color: #c0392b; /* Rojo oscuro */
+        }
+
+        .question {
+            font-family: 'Fredoka One', cursive;
+            font-size: 24px;
+            color: #2c3e50;
+            margin-bottom: 20px;
+        }
+
+        /* Estilo Claymorphism (Plastilina) para los botones */
+        .btn-container {
+            position: relative;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+
+        button {
+            font-family: 'Fredoka One', cursive;
+            font-size: 18px;
+            border: none;
+            padding: 10px 30px;
+            border-radius: 25px;
+            cursor: pointer;
+            color: white;
+            transition: transform 0.1s ease;
+        }
+
+        /* Botón SÍ - Azul */
+        .btn-yes {
+            background-color: #3498db;
+            box-shadow: 
+                -4px -4px 10px rgba(255,255,255,0.5) inset,
+                4px 4px 10px rgba(0,0,0,0.2) inset,
+                2px 2px 5px rgba(0,0,0,0.2);
+        }
+        .btn-yes:active { transform: scale(0.95); }
+
+        /* Botón NO - Rojo */
+        .btn-no {
+            background-color: #e74c3c;
+            position: absolute; /* Vital para que se mueva libremente */
+            box-shadow: 
+                -4px -4px 10px rgba(255,255,255,0.5) inset,
+                4px 4px 10px rgba(0,0,0,0.2) inset,
+                2px 2px 5px rgba(0,0,0,0.2);
+        }
+
+        /* Pantalla de éxito oculta inicialmente */
+        #success-screen {
+            display: none;
+            position: absolute;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: #f0f4f8;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+            text-align: center;
+        }
+        #success-screen h1 { font-size: 40px; color: #e74c3c; }
+        
+        .floating-icons { font-size: 40px; }
+    </style>
+</head>
+<body>
+
+    <div class="ticket" id="ticket">
+        <h1>¡Cita Arácnida! 🕸️</h1>
+        <p>Un evento multiversal exclusivo</p>
+        
+        <div class="details">
+            <p>📅 <span>Día:</span> [Ingresa el Día]</p>
+            <p>⏰ <span>Hora:</span> [Ingresa la Hora]</p>
+            <p>🥢 <span>Plan:</span> Auténtica Comida China y columpiarnos por la ciudad (o ver películas).</p>
+        </div>
+
+        <div class="question">¿Aceptas el plan? 🥡🕷️</div>
+        
+        <div class="btn-container">
+            <button class="btn-yes" id="btnYes">¡SÍ!</button>
+            <!-- El botón NO tiene posiciones iniciales relativas a su contenedor -->
+            <button class="btn-no" id="btnNo" style="right: 35px;">No</button> 
+        </div>
+    </div>
+
+    <!-- Pantalla al decir que sí -->
+    <div id="success-screen">
+        <h1>¡Sabía que dirías que sí! ❤️🕷️</h1>
+        <p class="floating-icons">🥡 🥢 🕸️ 🕷️ 🥠</p>
+        <h2>Prepárate para la mejor cita.</h2>
+    </div>
+
+    <script>
+        const btnNo = document.getElementById('btnNo');
+        const btnYes = document.getElementById('btnYes');
+        const successScreen = document.getElementById('success-screen');
+        const ticket = document.getElementById('ticket');
+
+        // Función para mover el botón NO
+        const moveButton = () => {
+            // Calculamos dimensiones de la ventana y del botón
+            const windowWidth = window.innerWidth;
+            const windowHeight = window.innerHeight;
+            const btnWidth = btnNo.offsetWidth;
+            const btnHeight = btnNo.offsetHeight;
+
+            // Generamos posiciones aleatorias asegurando que no se salga de la pantalla
+            const randomX = Math.floor(Math.random() * (windowWidth - btnWidth));
+            const randomY = Math.floor(Math.random() * (windowHeight - btnHeight));
+
+            // Cambiamos a posición fija (fixed) para que se mueva por toda la pantalla
+            btnNo.style.position = 'fixed';
+            btnNo.style.left = `${randomX}px`;
+            btnNo.style.top = `${randomY}px`;
+        };
+
+        // Eventos para desktop y mobile
+        btnNo.addEventListener('mouseover', moveButton);
+        btnNo.addEventListener('touchstart', (e) => {
+            e.preventDefault(); // Evita que se dispare el click en móviles
+            moveButton();
+        });
+
+        // Evento para el botón SÍ
+        btnYes.addEventListener('click', () => {
+            ticket.style.display = 'none';
+            successScreen.style.display = 'flex';
+        });
+    </script>
+</body>
+</html>
