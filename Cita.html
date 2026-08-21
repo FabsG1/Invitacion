@@ -3,496 +3,382 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Invitación VIP 🕷️🥡</title>
+    <title>VIP Access | Cita Arácnida</title>
     
     <!-- Librería de Confeti -->
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
     
-    <!-- Fuentes de Google: Sans serif limpia, Monospace para el ticket y Código de barras -->
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&family=Space+Mono:wght@400;700&family=Libre+Barcode+39&display=swap" rel="stylesheet">
+    <!-- Google Fonts: Poppins (General), Bebas Neue (Títulos), Courier (Detalles), Barcode (Código de barras) -->
+    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Courier+Prime:wght@400;700&family=Libre+Barcode+128+Text&family=Poppins:wght@400;600;800&display=swap" rel="stylesheet">
     
-    <!-- Iconos de Google (Material Symbols Rounded) -->
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Rounded:opsz,wght,FILL,GRAD@24,400,1,0" />
+    <!-- FontAwesome para Íconos Pro -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
     <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
 
         body {
             height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            /* Fondo cinemático oscuro para que el ticket resalte */
-            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-            font-family: 'Montserrat', sans-serif;
+            /* Fondo oscuro elegante inspirado en el traje de Spiderman */
+            background: radial-gradient(circle at center, #2b3252 0%, #111424 100%);
+            font-family: 'Poppins', sans-serif;
             overflow: hidden;
         }
 
-        /* --- CONTENEDOR DEL TICKET --- */
+        /* SOMBRA Y CONTENEDOR DEL TICKET */
         .ticket-wrapper {
-            /* Sombra ultra realista en capas */
-            filter: drop-shadow(0 5px 5px rgba(0,0,0,0.1)) 
-                    drop-shadow(0 15px 15px rgba(0,0,0,0.15)) 
-                    drop-shadow(0 30px 30px rgba(0,0,0,0.2));
-            position: relative;
+            filter: drop-shadow(0 20px 30px rgba(0,0,0,0.6));
+            width: 340px;
         }
 
-        .ticket {
-            background: #ffffff;
-            width: 360px;
-            height: 620px;
-            border-radius: 16px;
+        /* ESTRUCTURA DEL TICKET */
+        .ticket-top {
+            background: #fdfdfd;
+            border-radius: 12px 12px 0 0;
+            padding: 35px 25px 25px 25px;
             position: relative;
-            overflow: hidden;
+            height: 420px; /* Altura fija para la navegación */
             display: flex;
             flex-direction: column;
         }
 
-        /* Recortes laterales del ticket (los huequitos de los lados) */
-        .cutout-left, .cutout-right {
-            position: absolute;
-            top: 65%;
-            width: 40px;
-            height: 40px;
-            /* Debe ser del mismo color que el fondo de la pantalla para simular el hueco */
-            background: #151f30; 
-            border-radius: 50%;
-            z-index: 10;
-            transform: translateY(-50%);
-            /* Sombras internas para efecto 3D */
-            box-shadow: inset 4px 0px 8px rgba(0,0,0,0.2);
-        }
-        .cutout-left { left: -20px; }
-        .cutout-right { 
-            right: -20px; 
-            box-shadow: inset -4px 0px 8px rgba(0,0,0,0.2);
-        }
-
-        /* Línea punteada que divide el ticket */
+        /* LÍNEA PUNTEADA Y CORTES DEL TICKET (El efecto de boleto) */
         .ticket-divider {
+            background: #fdfdfd;
+            height: 2px;
+            position: relative;
+            border-bottom: 3px dashed #cbd5e1;
+        }
+        .ticket-divider::before, .ticket-divider::after {
+            content: '';
             position: absolute;
-            top: 65%;
-            left: 20px;
-            right: 20px;
-            border-top: 3px dashed #cbd5e1;
-            z-index: 5;
+            top: -12px; /* Centrado en la línea */
+            width: 26px;
+            height: 26px;
+            background: #111424; /* Mismo color del fondo del body */
+            border-radius: 50%;
+        }
+        .ticket-divider::before { left: -13px; }
+        .ticket-divider::after { right: -13px; }
+
+        .ticket-bottom {
+            background: #fdfdfd;
+            border-radius: 0 0 12px 12px;
+            padding: 15px;
+            text-align: center;
         }
 
-        /* --- PANTALLAS --- */
+        /* PANTALLAS (Navegación) */
         .screen {
             display: none;
             flex-direction: column;
+            align-items: center;
+            text-align: center;
             height: 100%;
-            width: 100%;
-            padding: 30px;
-            animation: fadeIn 0.4s ease forwards;
+            animation: slideIn 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
         }
-        .screen.active {
-            display: flex;
-        }
+        .screen.active { display: flex; }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* --- PANTALLA 1: EL SOBRE --- */
-        .screen-1-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
+        /* TIPOGRAFÍAS Y ESTILOS */
+        h1 {
+            font-family: 'Bebas Neue', sans-serif;
+            color: #e23636;
+            font-size: 38px;
+            letter-spacing: 2px;
+            margin-bottom: 5px;
+            line-height: 1;
         }
-        
-        .envelope-icon {
-            font-size: 100px;
-            color: #e23636; /* Rojo Spiderman */
-            animation: float 3s ease-in-out infinite;
-            filter: drop-shadow(0 10px 10px rgba(226, 54, 54, 0.3));
-            margin-bottom: 20px;
-        }
-
-        @keyframes float {
-            0%, 100% { transform: translateY(0); }
-            50% { transform: translateY(-15px); }
-        }
-
-        /* --- PANTALLA 2: DETALLES DEL TICKET --- */
-        .ticket-header {
-            text-align: center;
-            padding-bottom: 20px;
-            border-bottom: 2px solid #f1f5f9;
-            margin-bottom: 20px;
-        }
-        .ticket-header h1 {
-            font-size: 24px;
-            color: #0f172a;
-            font-weight: 800;
+        .subtitle {
+            color: #64748b;
+            font-size: 13px;
+            font-weight: 600;
             text-transform: uppercase;
             letter-spacing: 1px;
-        }
-        .ticket-header span {
-            color: #e23636;
-            font-size: 14px;
-            font-weight: 600;
-            letter-spacing: 3px;
-        }
-
-        /* Metadatos estilo cine (Monospace) */
-        .metadata-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 15px;
             margin-bottom: 20px;
         }
-        .data-item {
-            display: flex;
-            flex-direction: column;
+
+        /* ICONO DE SOBRE ANIMADO */
+        .envelope-icon {
+            font-size: 65px;
+            color: #2980b9;
+            margin: 30px 0;
+            animation: float 3s ease-in-out infinite;
         }
-        .data-item label {
-            font-family: 'Space Mono', monospace;
-            font-size: 10px;
-            color: #64748b;
-            margin-bottom: 2px;
-        }
-        .data-item p {
-            font-family: 'Space Mono', monospace;
-            font-size: 14px;
-            color: #0f172a;
-            font-weight: 700;
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
         }
 
-        /* Área de scroll (Claymorphism sutil) */
-        .scroll-area {
-            flex: 1;
+        /* ZONA DE DETALLES (ESTILO RECIBO) */
+        .receipt-box {
+            font-family: 'Courier Prime', monospace;
             background: #f8fafc;
-            border-radius: 12px;
+            border: 1px solid #e2e8f0;
             padding: 15px;
+            width: 100%;
+            border-radius: 8px;
+            text-align: left;
+            margin-bottom: 20px;
+            flex-grow: 1;
             overflow-y: auto;
-            box-shadow: inset 0 4px 6px rgba(0,0,0,0.02), inset 0 0 0 1px #e2e8f0;
+        }
+        .receipt-box::-webkit-scrollbar { width: 6px; }
+        .receipt-box::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
+
+        .receipt-row {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
             font-size: 14px;
             color: #334155;
-            line-height: 1.6;
-            margin-bottom: 30px; /* Espacio para el código de barras */
+            border-bottom: 1px dotted #cbd5e1;
+            padding-bottom: 4px;
         }
-        .scroll-area::-webkit-scrollbar { width: 6px; }
-        .scroll-area::-webkit-scrollbar-track { background: transparent; }
-        .scroll-area::-webkit-scrollbar-thumb { background: #cbd5e1; border-radius: 10px; }
-
-        /* Código de barras */
-        .barcode {
-            font-family: 'Libre Barcode 39', cursive;
-            font-size: 45px;
-            text-align: center;
-            color: #0f172a;
-            position: absolute;
-            bottom: 20px;
-            left: 0;
-            width: 100%;
+        .receipt-row strong { color: #0f172a; }
+        .receipt-desc {
+            font-size: 13px;
+            color: #475569;
+            margin-top: 10px;
+            line-height: 1.5;
         }
 
-        /* --- PANTALLA 3: LA PREGUNTA --- */
-        .question-container {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-        }
-        .question-container h2 {
-            font-size: 26px;
-            color: #0f172a;
-            margin-bottom: 30px;
-        }
-
-        /* --- BOTONES PREMIUM --- */
-        .btn-group {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-            width: 100%;
-            margin-top: auto;
-        }
-
+        /* BOTONES PREMIUM */
+        .btn-group { width: 100%; display: flex; gap: 10px; margin-top: auto; }
+        
         button {
+            font-family: 'Poppins', sans-serif;
+            font-weight: 600;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
             display: flex;
             justify-content: center;
             align-items: center;
             gap: 8px;
-            font-family: 'Montserrat', sans-serif;
-            font-weight: 700;
-            font-size: 16px;
-            border: none;
-            border-radius: 50px;
-            padding: 16px 24px;
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-
-        /* Botón Abrir / Siguiente (Azul oscuro elegante) */
-        .btn-primary {
-            background: #0f172a;
-            color: white;
-            box-shadow: 0 10px 20px rgba(15, 23, 42, 0.2);
-        }
-        .btn-primary:hover { background: #1e293b; transform: translateY(-2px); }
-
-        /* Botón SÍ (Rojo brillante con pulso) */
-        .btn-yes {
-            background: linear-gradient(135deg, #e23636, #c0392b);
-            color: white;
-            font-size: 18px;
-            box-shadow: 0 10px 20px rgba(226, 54, 54, 0.3), inset 0 -3px 0 rgba(0,0,0,0.1);
-            animation: pulse-red 2s infinite;
-        }
-        .btn-yes:active { transform: scale(0.95); }
-
-        @keyframes pulse-red {
-            0% { box-shadow: 0 0 0 0 rgba(226, 54, 54, 0.5); }
-            70% { box-shadow: 0 0 0 15px rgba(226, 54, 54, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(226, 54, 54, 0); }
-        }
-
-        /* Botón NO (Sutil y gris) */
-        .btn-no {
-            background: #f1f5f9;
-            color: #64748b;
+            width: 100%;
             font-size: 14px;
-            padding: 12px 24px;
         }
-        /* Clase que se añade al pulsar NO para que desaparezca */
-        .btn-no.vanish {
-            transform: scale(0);
-            opacity: 0;
+        button:active { transform: scale(0.95); }
+
+        .btn-primary {
+            background: #e23636;
+            color: white;
+            box-shadow: 0 4px 15px rgba(226, 54, 54, 0.3);
+        }
+        .btn-primary:hover { background: #c0392b; }
+
+        .btn-secondary {
+            background: #f1f5f9;
+            color: #475569;
+        }
+        
+        .btn-yes {
+            background: #2980b9;
+            color: white;
+            font-size: 16px;
+            padding: 15px;
+            box-shadow: 0 4px 15px rgba(41, 128, 185, 0.4);
+        }
+
+        .btn-no {
+            background: transparent;
+            color: #94a3b8;
+            border: 1px solid #cbd5e1;
+        }
+
+        /* ANIMACIÓN DE DESAPARICIÓN DEL BOTÓN NO */
+        .implode {
+            animation: popOut 0.3s forwards;
             pointer-events: none;
         }
+        @keyframes popOut {
+            50% { transform: scale(1.1); }
+            100% { transform: scale(0); opacity: 0; width: 0; padding: 0; border: none; margin: 0; }
+        }
 
-        /* Mensaje de Upsss */
-        .toast-message {
+        /* MENSAJE DE ERROR CUTE */
+        .error-msg {
             display: none;
+            color: #e23636;
             background: #fef2f2;
-            color: #b91c1c;
-            border-left: 4px solid #e23636;
-            padding: 15px;
+            border: 1px solid #fecaca;
+            padding: 10px;
             border-radius: 8px;
-            font-size: 14px;
+            font-size: 12px;
             font-weight: 600;
-            margin-top: 15px;
-            animation: slideUpBounce 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+            width: 100%;
+            margin-top: 10px;
+            animation: fadeInMsg 0.4s ease;
+        }
+        @keyframes fadeInMsg { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* CÓDIGO DE BARRAS */
+        .barcode {
+            font-family: 'Libre Barcode 128 Text', cursive;
+            font-size: 45px;
+            color: #1e293b;
+            line-height: 1;
         }
 
-        @keyframes slideUpBounce {
-            0% { opacity: 0; transform: translateY(20px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-
-        /* --- PANTALLA FINAL --- */
-        #success-screen {
+        /* PANTALLA FINAL */
+        .success-overlay {
             display: none;
             position: absolute;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: #ffffff;
+            background: rgba(253, 253, 253, 0.95);
+            z-index: 100;
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            z-index: 100;
+            border-radius: 12px;
             text-align: center;
-            border-radius: 16px;
+            padding: 20px;
         }
-        #success-screen h1 { font-size: 32px; color: #0f172a; margin-bottom: 10px; }
-        .hero-emojis { font-size: 50px; margin: 20px 0; }
-        
-        .floating-nav {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background: none;
-            border: none;
-            color: #94a3b8;
-            padding: 0;
-            cursor: pointer;
-            box-shadow: none;
+        .success-overlay h2 {
+            font-family: 'Bebas Neue', sans-serif;
+            font-size: 40px;
+            color: #2980b9;
+            margin-bottom: 15px;
         }
-        .floating-nav:hover { color: #0f172a; transform: translateX(-3px); }
-
+        .success-icons i {
+            font-size: 30px;
+            color: #e23636;
+            margin: 0 5px;
+        }
     </style>
 </head>
 <body>
 
     <div class="ticket-wrapper">
-        <div class="ticket" id="ticket">
+        <div class="ticket-top">
             
-            <!-- Recortes y divisor (Se aplican a las pantallas 2 y 3) -->
-            <div class="cutout-left" id="cut-l" style="display:none;"></div>
-            <div class="cutout-right" id="cut-r" style="display:none;"></div>
-            <div class="ticket-divider" id="div-line" style="display:none;"></div>
-
-            <!-- PANTALLA 1: INICIO -->
+            <!-- PANTALLA 1: EL SOBRE -->
             <div class="screen active" id="screen-1">
-                <div class="screen-1-content">
-                    <span class="material-symbols-rounded envelope-icon">mail</span>
-                    <h1 style="color: #0f172a; margin-bottom: 10px;">Entrega Especial</h1>
-                    <p style="color: #64748b; font-weight: 600;">Tienes correspondencia arácnida pendiente de abrir.</p>
-                </div>
+                <i class="fa-solid fa-envelope-open-text envelope-icon"></i>
+                <h1>ENTREGA ESPECIAL</h1>
+                <div class="subtitle">Clasificación: Multiversal</div>
+                <p style="color: #64748b; font-size: 14px; margin-bottom: 30px;">
+                    Se ha interceptado un mensaje en tu línea temporal. Requiere decodificación inmediata.
+                </p>
                 <div class="btn-group">
                     <button class="btn-primary" onclick="goToScreen(2)">
-                        Abrir Invitación <span class="material-symbols-rounded"> drafts </span>
+                        <i class="fa-solid fa-unlock-keyhole"></i> Decodificar Mensaje
                     </button>
                 </div>
             </div>
 
-            <!-- PANTALLA 2: DETALLES DEL TICKET -->
+            <!-- PANTALLA 2: EL TICKET / RECIBO -->
             <div class="screen" id="screen-2">
-                <button class="floating-nav" onclick="goToScreen(1)">
-                    <span class="material-symbols-rounded">arrow_back</span>
-                </button>
-
-                <div class="ticket-header">
-                    <span>VIP ADMISSION</span>
-                    <h1>Cita Multiversal</h1>
-                </div>
-
-                <!-- Datos Monospace -->
-                <div class="metadata-grid">
-                    <div class="data-item">
-                        <label>FECHA</label>
-                        <p>[24 Ago 2026]</p> <!-- EDITA AQUÍ EL DÍA -->
+                <h1>ADMIT ONE</h1>
+                <div class="subtitle"><i class="fa-solid fa-ticket"></i> Pase VIP Exclusivo</div>
+                
+                <div class="receipt-box">
+                    <div class="receipt-row">
+                        <span>FECHA:</span> <strong>[Día, Ej: Vie 25 Oct]</strong>
                     </div>
-                    <div class="data-item">
-                        <label>HORA</label>
-                        <p>[19:00 HRS]</p> <!-- EDITA AQUÍ LA HORA -->
+                    <div class="receipt-row">
+                        <span>HORA:</span> <strong>[08:00 PM]</strong>
                     </div>
-                    <div class="data-item">
-                        <label>LUGAR</label>
-                        <p>[Tu Ciudad]</p> <!-- EDITA AQUÍ EL LUGAR -->
+                    <div class="receipt-row">
+                        <span>LUGAR:</span> <strong>[Tu Ciudad]</strong>
                     </div>
-                    <div class="data-item">
-                        <label>DRESS CODE</label>
-                        <p>Casual / Cómodo</p>
+                    <div class="receipt-desc">
+                        <i class="fa-solid fa-bowl-food" style="color: #e23636;"></i> <strong>MENÚ:</strong> Auténtica comida china (Rollitos, fideos y galletas de la fortuna).<br><br>
+                        <i class="fa-solid fa-spider" style="color: #2980b9;"></i> <strong>MISIÓN:</strong> Ver películas, hablar de cosas geek y pasar el mejor rato posible.
                     </div>
                 </div>
 
-                <!-- Área de texto con scroll -->
-                <div class="scroll-area">
-                    <p><strong>El Plan:</strong></p>
-                    <p>Auténtica comida china 🥡 (yo invito, tú solo pon la buena actitud y domina los palillos chinos).</p>
-                    <br>
-                    <p><strong>Misión secundaria:</strong></p>
-                    <p>Relajarnos, platicar, ver películas y columpiarnos por la ciudad 🕸️🕷️. He estado preparando este plan con mucho cuidado porque no podía faltar mi persona favorita.</p>
-                </div>
-
-                <div class="barcode">SPIDER-CITA-2026</div>
-
-                <div class="btn-group" style="position: absolute; bottom: 30px; left: 30px; right: 30px;">
-                    <button class="btn-primary" onclick="goToScreen(3)">
-                        Continuar <span class="material-symbols-rounded">arrow_forward</span>
-                    </button>
+                <div class="btn-group">
+                    <button class="btn-secondary" onclick="goToScreen(1)"><i class="fa-solid fa-arrow-left"></i> Atrás</button>
+                    <button class="btn-primary" onclick="goToScreen(3)">Continuar <i class="fa-solid fa-arrow-right"></i></button>
                 </div>
             </div>
 
             <!-- PANTALLA 3: LA PREGUNTA -->
             <div class="screen" id="screen-3">
-                <button class="floating-nav" onclick="goToScreen(2)">
-                    <span class="material-symbols-rounded">arrow_back</span>
-                </button>
-
-                <div class="question-container">
-                    <span class="material-symbols-rounded" style="font-size: 60px; color: #e23636; margin-bottom: 15px;">restaurant</span>
-                    <h2>¿Aceptas el plan?</h2>
-                    
-                    <div class="btn-group">
-                        <button class="btn-yes" id="btnYes">
-                            <span class="material-symbols-rounded">favorite</span> ¡OBVIO SÍ!
-                        </button>
-                        <button class="btn-no" id="btnNo">
-                            No creo
-                        </button>
-                    </div>
-
-                    <!-- Mensaje de error oculto -->
-                    <div class="toast-message" id="toast-msg">
-                        <span class="material-symbols-rounded" style="vertical-align: middle;">error</span> 
-                        Mis sentidos arácnidos dicen que esa no es la respuesta correcta 🕷️👀
-                    </div>
-                </div>
+                <h1 style="font-size: 32px; color: #1e293b;">CONFIRMAR ASISTENCIA</h1>
+                <div class="subtitle">El destino del multiverso depende de ti</div>
                 
-                <div class="barcode">SPIDER-CITA-2026</div>
+                <i class="fa-solid fa-heart-circle-check" style="font-size: 50px; color: #e23636; margin: 20px 0;"></i>
+
+                <div style="width: 100%; display: flex; gap: 10px; margin-top: auto; transition: all 0.3s;">
+                    <button class="btn-yes" id="btnYes"><i class="fa-solid fa-check"></i> SÍ, ACEPTO</button>
+                    <button class="btn-no" id="btnNo"><i class="fa-solid fa-xmark"></i> NO</button>
+                </div>
+
+                <div class="error-msg" id="errorMsg">
+                    <i class="fa-solid fa-triangle-exclamation"></i> Anomalía detectada: Esa opción rompería el evento canónico. Intenta de nuevo.
+                </div>
+
+                <button class="btn-secondary" style="margin-top: 15px;" onclick="goToScreen(2)">
+                    <i class="fa-solid fa-arrow-rotate-left"></i> Revisar Detalles
+                </button>
             </div>
 
-            <!-- PANTALLA 4: ÉXITO -->
-            <div id="success-screen">
-                <span class="material-symbols-rounded" style="font-size: 70px; color: #e23636;">verified</span>
-                <h1>¡Plan Confirmado!</h1>
-                <p style="color: #64748b; font-weight: 600;">El multiverso está a nuestro favor.</p>
-                <div class="hero-emojis">🥡 🥢 🕸️ 🕷️</div>
-                <p style="font-family: 'Space Mono', monospace; font-weight: 700; color: #0f172a;">Nos vemos pronto.</p>
+            <!-- PANTALLA FINAL DE ÉXITO (Se superpone a todo el ticket top) -->
+            <div class="success-overlay" id="success-screen">
+                <h2>¡RESERVA CONFIRMADA!</h2>
+                <div class="success-icons">
+                    <i class="fa-solid fa-bowl-rice"></i>
+                    <i class="fa-solid fa-spider"></i>
+                    <i class="fa-solid fa-ticket"></i>
+                </div>
+                <p style="color: #475569; font-weight: 600; margin-top: 15px;">
+                    Prepara tu mejor outfit arácnido.<br>¡Nos vemos en la cita!
+                </p>
             </div>
 
+        </div>
+
+        <div class="ticket-divider"></div>
+
+        <!-- CÓDIGO DE BARRAS INFERIOR -->
+        <div class="ticket-bottom">
+            <p class="barcode">SPIDER-DATE-2026</p>
+            <p style="font-size: 9px; color: #94a3b8; font-weight: 600; margin-top: -5px; letter-spacing: 1px;">ID: 0910-MULTIVERSO-TICKET</p>
         </div>
     </div>
 
     <script>
-        // Elementos decorativos del ticket que solo se muestran en la pantalla 2 y 3
-        const cutL = document.getElementById('cut-l');
-        const cutR = document.getElementById('cut-r');
-        const divLine = document.getElementById('div-line');
-
-        function goToScreen(screenNumber) {
-            // Oculta todas
+        // Navegación de pantallas
+        function goToScreen(num) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
-            // Muestra la seleccionada
-            document.getElementById(`screen-${screenNumber}`).classList.add('active');
-
-            // Mostrar/Ocultar recortes del ticket según la pantalla
-            if(screenNumber === 2 || screenNumber === 3) {
-                cutL.style.display = 'block';
-                cutR.style.display = 'block';
-                divLine.style.display = 'block';
-            } else {
-                cutL.style.display = 'none';
-                cutR.style.display = 'none';
-                divLine.style.display = 'none';
-            }
+            document.getElementById('screen-' + num).classList.add('active');
         }
 
-        // Lógica Botón NO
+        // Animación del botón NO
         const btnNo = document.getElementById('btnNo');
-        const toastMsg = document.getElementById('toast-msg');
+        const errorMsg = document.getElementById('errorMsg');
 
         btnNo.addEventListener('click', () => {
-            // Añade la clase que encoge el botón hasta desaparecer
-            btnNo.classList.add('vanish');
-            
-            // Espera a que termine la animación (0.3s) para mostrar el mensaje
+            // Añade la clase de implosión al botón NO
+            btnNo.classList.add('implode');
+            // Muestra el mensaje de error temático de Spiderman (Evento canónico)
             setTimeout(() => {
-                btnNo.style.display = 'none';
-                toastMsg.style.display = 'block';
-            }, 300);
+                errorMsg.style.display = 'block';
+            }, 300); // Aparece justo después de que se encoge el botón
         });
 
-        // Lógica Botón SÍ (Confeti Spiderman)
+        // Evento botón SÍ y Confeti
         const btnYes = document.getElementById('btnYes');
         const successScreen = document.getElementById('success-screen');
 
         btnYes.addEventListener('click', () => {
-            // Ocultar botones y mensaje, mostrar pantalla de éxito
-            document.getElementById('screen-3').classList.remove('active');
+            // Mostrar overlay de éxito
             successScreen.style.display = 'flex';
-            
-            // Ocultar recortes del ticket
-            cutL.style.display = 'none';
-            cutR.style.display = 'none';
-            divLine.style.display = 'none';
 
-            // Disparar Confeti
-            var duration = 4 * 1000;
+            // Configuración del confeti
+            var duration = 3 * 1000;
             var animationEnd = Date.now() + duration;
             var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 1000 };
 
@@ -503,15 +389,16 @@
                 if (timeLeft <= 0) return clearInterval(interval);
 
                 var particleCount = 50 * (timeLeft / duration);
-                // Colores: Rojo (#e23636), Azul oscuro (#0f172a), Blanco, Dorado
+                
+                // Colores: Rojo Spidey, Azul Spidey, Dorado (por la comida china/magia)
                 confetti(Object.assign({}, defaults, { 
                     particleCount, 
-                    colors: ['#e23636', '#0f172a', '#ffffff', '#f59e0b'],
+                    colors: ['#e23636', '#2980b9', '#f1c40f'],
                     origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } 
                 }));
                 confetti(Object.assign({}, defaults, { 
                     particleCount, 
-                    colors: ['#e23636', '#0f172a', '#ffffff', '#f59e0b'],
+                    colors: ['#e23636', '#2980b9', '#f1c40f'],
                     origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } 
                 }));
             }, 250);
