@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scrapbook de Citas | Para Fer</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💌</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Poppins:wght@300;400;600;800&family=Caveat:wght@700&family=Patrick+Hand&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --album-primary: #c0392b; 
+            --album-text: #2c3e50;
+            --album-muted: #5d4037;
+            --bg-wood: #3e2723; 
+            --paper-bg: #f4e8d3; 
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-wood);
+            background-image: repeating-linear-gradient(90deg, rgba(0,0,0,0.05) 0px, rgba(0,0,0,0.05) 1px, transparent 1px, transparent 10px);
+            font-family: 'Poppins', sans-serif;
+            color: var(--album-text);
+            display: flex; justify-content: center; align-items: center;
+            min-height: 100vh; padding: 20px 0;
+            overflow-x: hidden;
+        }
+
+        .scrapbook-album {
+            background: var(--paper-bg); width: 95%; max-width: 1000px; min-height: 85vh;
+            border-radius: 8px; box-shadow: 0 15px 40px rgba(0,0,0,0.6), inset 0 0 50px rgba(139, 69, 19, 0.1);
+            position: relative; padding: 50px 30px;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+            animation: fadeIn 0.5s ease-out;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.98); } to { opacity: 1; transform: scale(1); } }
+
+        .spirals-container { position: absolute; top: -15px; left: 0; width: 100%; display: flex; justify-content: space-evenly; z-index: 10; }
+        .spiral { width: 15px; height: 40px; background: linear-gradient(to right, #2c3e50, #7f8c8d, #2c3e50); border-radius: 10px; box-shadow: 2px 5px 5px rgba(0,0,0,0.5); }
+        
+        .gallery-header { text-align: center; margin-bottom: 40px; }
+        .gallery-header h1 { font-family: 'Playfair Display', serif; font-size: 45px; color: var(--album-primary); letter-spacing: 1px; }
+        .gallery-header p { font-family: 'Caveat', cursive; font-size: 28px; color: var(--album-muted); margin-top: -10px; }
+        
+        .grid-gallery { display: flex; flex-wrap: wrap; justify-content: center; gap: 40px; }
+        .red-tape { position: absolute; width: 80px; height: 30px; background-color: rgba(255, 255, 255, 0.9); background-image: repeating-linear-gradient(0deg, transparent, transparent 5px, rgba(192, 57, 43, 0.6) 5px, rgba(192, 57, 43, 0.6) 10px), repeating-linear-gradient(90deg, transparent, transparent 5px, rgba(192, 57, 43, 0.6) 5px, rgba(192, 57, 43, 0.6) 10px); top: -12px; left: 50%; transform: translateX(-50%) rotate(-4deg); box-shadow: 1px 2px 4px rgba(0,0,0,0.2); z-index: 5; }
+        
+        .polaroid { background: #fff; padding: 15px 15px 30px 15px; border-radius: 2px; box-shadow: 2px 8px 15px rgba(0,0,0,0.15); cursor: pointer; transition: transform 0.3s ease, box-shadow 0.3s ease; position: relative; width: 260px; }
+        .polaroid:nth-child(even) { transform: rotate(3deg); }
+        .polaroid:nth-child(odd) { transform: rotate(-2deg); }
+        .polaroid:hover { transform: translateY(-10px) rotate(0deg) scale(1.05); z-index: 10; box-shadow: 5px 15px 25px rgba(0,0,0,0.2); }
+        .polaroid-img { width: 100%; height: 220px; object-fit: cover; border-radius: 2px; border: 1px solid #eee; }
+        .polaroid-caption { font-family: 'Patrick Hand', cursive; font-size: 24px; text-align: center; margin-top: 15px; color: var(--album-text); transition: color 0.3s; }
+
+        /* Estilo especial para la tarjeta bloqueada */
+        .polaroid.locked { filter: grayscale(70%); opacity: 0.9; }
+        .polaroid.locked:hover { transform: translateY(-5px) rotate(1deg) scale(1.02); }
+    </style>
+</head>
+<body>
+
+    <div class="scrapbook-album">
+        <div class="spirals-container">
+            <div class="spiral"></div><div class="spiral"></div><div class="spiral"></div><div class="spiral"></div>
+            <div class="spiral"></div><div class="spiral"></div><div class="spiral"></div><div class="spiral"></div>
+            <div class="spiral"></div><div class="spiral"></div><div class="spiral"></div><div class="spiral"></div>
+        </div>
+
+        <div class="gallery-header">
+            <h1>Scrapbook</h1>
+            <p>Fer y Fabi ❤️</p>
+        </div>
+
+        <div class="grid-gallery">
+            <!-- NAVEGACIÓN A CITA 1 -->
+            <div class="polaroid" onclick="window.location.href='citas/cita1.html'">
+                <div class="red-tape"></div>
+                <img src="https://images.unsplash.com/photo-1517457373958-b7bdd4587205?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="polaroid-img">
+                <div class="polaroid-caption">Galerías Serdán</div>
+            </div>
+
+            <!-- NAVEGACIÓN A CARTA SNOOPY -->
+            <div class="polaroid" onclick="window.location.href='cartas/snoopy.html'">
+                <div class="red-tape"></div>
+                <img src="https://images.unsplash.com/photo-1586075010923-2dd4570fb338?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="polaroid-img">
+                <div class="polaroid-caption">Carta para ti 💌</div>
+            </div>
+
+            <!-- NAVEGACIÓN A FOTOS -->
+            <div class="polaroid" onclick="window.location.href='fotos/collage_corazon.html'">
+                <div class="red-tape"></div>
+                <img src="https://images.unsplash.com/photo-1502922718153-61e9be253331?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="polaroid-img">
+                <div class="polaroid-caption">Nuestras Fotos</div>
+            </div>
+
+            <!-- TARJETA SECRETA (No redirige, muestra el mensaje) -->
+            <div class="polaroid locked" onclick="mostrarSecreto(this)">
+                <div class="red-tape"></div>
+                <!-- Imagen estética de un regalo/sorpresa -->
+                <img src="https://images.unsplash.com/photo-1549465220-1a8b9238cd48?ixlib=rb-4.0.3&auto=format&fit=crop&w=500&q=80" class="polaroid-img">
+                <div class="polaroid-caption">Próximamente...</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Función para la tarjeta secreta
+        function mostrarSecreto(elemento) {
+            const texto = elemento.querySelector('.polaroid-caption');
+            
+            // Cambiamos el texto y el color a rojo Scrapbook
+            texto.innerHTML = "Es un secreto...";
+            texto.style.color = "var(--album-primary)";
+            
+            // Después de 2.5 segundos, lo regresamos a la normalidad
+            setTimeout(() => {
+                texto.innerHTML = "Próximamente...";
+                texto.style.color = "var(--album-text)";
+            }, 2500);
+        }
+    </script>
+</body>
+</html>

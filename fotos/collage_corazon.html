@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nuestras Fotos | Collage</title>
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>📸</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --primary: #c0392b;
+            --bg-wood: #3e2723;
+            --paper-bg: #f4e8d3;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-wood);
+            background-image: repeating-linear-gradient(90deg, rgba(0,0,0,0.05) 0px, rgba(0,0,0,0.05) 1px, transparent 1px, transparent 10px);
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            padding: 40px 20px;
+        }
+
+        .back-to-album {
+            position: absolute; top: 20px; left: 20px;
+            background: white; color: var(--primary);
+            border: none; padding: 10px 20px; border-radius: 20px;
+            font-family: 'Poppins', sans-serif; font-weight: 600;
+            cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            z-index: 500; display: flex; align-items: center; gap: 8px;
+            text-decoration: none; transition: 0.2s;
+        }
+        .back-to-album:hover { transform: scale(1.05); }
+
+        .heart-collage-container {
+            background: var(--paper-bg); padding: 40px; border-radius: 10px;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.6); position: relative;
+            width: 100%; max-width: 800px;
+            animation: fadeIn 0.8s ease-out;
+            background-image: url("data:image/svg+xml,%3Csvg width='100' height='100' viewBox='0 0 100 100' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.8' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100' height='100' filter='url(%23noise)' opacity='0.05'/%3E%3C/svg%3E");
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+
+        .heart-title { font-family: 'Playfair Display', serif; text-align: center; color: var(--primary); font-size: 40px; margin-bottom: 30px; letter-spacing: 1px;}
+        
+        .heart-grid {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            grid-template-rows: repeat(7, 1fr);
+            gap: 8px; width: 100%; aspect-ratio: 1; 
+        }
+        
+        .h-img {
+            background-color: #ddd; border: 4px solid white;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2); border-radius: 2px;
+            background-size: cover; background-position: center; transition: 0.3s;
+            cursor: pointer;
+        }
+        .h-img:hover { transform: scale(1.15); z-index: 10; box-shadow: 0 8px 20px rgba(0,0,0,0.4); }
+
+        /* Mapeo del corazón (18 fotos periféricas) */
+        .i1 { grid-area: 1 / 2 / 2 / 3; } .i2 { grid-area: 1 / 6 / 2 / 7; }
+        .i3 { grid-area: 2 / 1 / 3 / 2; } .i4 { grid-area: 2 / 2 / 3 / 3; }
+        .i5 { grid-area: 2 / 3 / 3 / 4; } .i6 { grid-area: 2 / 5 / 3 / 6; }
+        .i7 { grid-area: 2 / 6 / 3 / 7; } .i8 { grid-area: 2 / 7 / 3 / 8; }
+        .i9 { grid-area: 3 / 1 / 4 / 2; } .i10 { grid-area: 3 / 2 / 4 / 3; }
+        .i11 { grid-area: 3 / 6 / 4 / 7; } .i12 { grid-area: 3 / 7 / 4 / 8; }
+        .i13 { grid-area: 4 / 2 / 5 / 3; } .i14 { grid-area: 4 / 6 / 5 / 7; }
+        .i15 { grid-area: 6 / 3 / 7 / 4; } .i16 { grid-area: 6 / 4 / 7 / 5; }
+        .i17 { grid-area: 6 / 5 / 7 / 6; } .i18 { grid-area: 7 / 4 / 8 / 5; }
+        
+        /* FOTO CENTRAL VERTICAL ALARGADA (Ocupa desde la fila 2 hasta la 6, y columnas 3 a 5) */
+        .icenter { 
+            grid-area: 2 / 3 / 7 / 6; 
+            border-width: 6px; 
+            box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+        } 
+
+        @media (max-width: 600px) {
+            .heart-collage-container { padding: 20px; }
+            .h-img { border-width: 2px; }
+            .icenter { border-width: 4px; }
+            .heart-title { font-size: 28px; margin-bottom: 15px; }
+        }
+    </style>
+</head>
+<body>
+
+    <a href="../index.html" class="back-to-album"><i class="fa-solid fa-arrow-left-long"></i> Volver al Álbum</a>
+
+    <div class="heart-collage-container">
+        <h2 class="heart-title">Nuestras Fotos ❤️</h2>
+        
+         <!-- GRID DEL CORAZÓN (Reemplaza las URL dentro de los background-image) -->
+        <div class="heart-grid">
+            <div class="h-img i1" style="background-image: url('');"></div>
+            <div class="h-img i2" style="background-image: url('');"></div>
+            <div class="h-img i3" style="background-image: url('../assets/cine1.jpg');"></div>
+            <div class="h-img i4" style="background-image: url('');"></div>
+            <div class="h-img i6" style="background-image: url('');"></div>
+            <div class="h-img i7" style="background-image: url('../assets/regalos.png');"></div>
+            <div class="h-img i8" style="background-image: url('');"></div>
+            <div class="h-img i9" style="background-image: url('');"></div>
+            <div class="h-img i10" style="background-image: url('');"></div>
+            <div class="h-img i11" style="background-image: url('../assets/cine2.jpg');"></div>
+            <div class="h-img i12" style="background-image: url('../assets/flores.jpg');"></div>
+            <div class="h-img i13" style="background-image: url('');"></div>
+            <div class="h-img i14" style="background-image: url('');"></div>
+            <div class="h-img icenter" style="background-image: url('../assets/nosotros.jpg');"></div>
+            <div class="h-img i18" style="background-image: url('');"></div>
+        </div>
+    </div>
+
+</body>
+</html>
