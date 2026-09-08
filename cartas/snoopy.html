@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Carta Snoopy | Para Fer</title>
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>💌</text></svg>">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,700&family=Poppins:wght@300;400;600;800&family=Patrick+Hand&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --bg-wood: #3e2723;
+            --snoopy-red: #e74c3c;
+            --snoopy-yellow: #f1c40f;
+            --snoopy-black: #2c3e50;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            background-color: var(--bg-wood);
+            background-image: repeating-linear-gradient(90deg, rgba(0,0,0,0.05) 0px, rgba(0,0,0,0.05) 1px, transparent 1px, transparent 10px);
+            font-family: 'Poppins', sans-serif;
+            min-height: 100vh;
+            display: flex; justify-content: center; align-items: center;
+            overflow: hidden; 
+        }
+
+        /* Botón de regreso */
+        .back-to-album {
+            position: absolute; top: 20px; left: 20px;
+            background: white; color: var(--snoopy-red);
+            border: none; padding: 10px 20px; border-radius: 20px;
+            font-family: 'Poppins', sans-serif; font-weight: 600;
+            cursor: pointer; box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+            z-index: 500; display: flex; align-items: center; gap: 8px;
+            text-decoration: none; transition: 0.2s;
+        }
+        .back-to-album:hover { transform: scale(1.05); }
+
+        /* Contenedor Principal */
+        .snoopy-container {
+            width: 90%; max-width: 450px; position: relative;
+            display: flex; flex-direction: column; align-items: center;
+            animation: fadeIn 0.8s ease-out;
+            margin-top: 50px;
+        }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Portada (Techo de la casita) */
+        .snoopy-cover {
+            background: #d32f2f;
+            width: 100%; padding: 40px 20px; border-radius: 8px; text-align: center;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.4); cursor: pointer;
+            transition: 0.6s cubic-bezier(0.68, -0.55, 0.27, 1.55);
+            position: relative; z-index: 10;
+            border: 2px solid #b71c1c;
+            background-image: repeating-linear-gradient(0deg, transparent, transparent 30px, rgba(0,0,0,0.1) 30px, rgba(0,0,0,0.1) 32px);
+        }
+        .snoopy-cover:hover { transform: translateY(-5px); }
+        .snoopy-cover.slide-up { transform: translateY(-100vh) rotate(10deg); opacity: 0; pointer-events: none; }
+        
+        .snoopy-roof-img {
+            width: 180px; margin-top: -80px;
+            filter: drop-shadow(0 10px 10px rgba(0,0,0,0.3));
+            animation: breathe 3s infinite ease-in-out;
+        }
+        @keyframes breathe { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+        
+        .snoopy-cover h2 { font-family: 'Playfair Display', serif; color: white; margin-top: 20px; font-size: 32px; }
+
+        /* Papel de la Carta con Scroll Integrado */
+        .snoopy-letter {
+            background-color: #fffdf8;
+            background-image: linear-gradient(transparent 95%, #cbd5e1 95%);
+            background-size: 100% 32px; 
+            background-attachment: local; /* Permite que las líneas hagan scroll junto con el texto */
+            width: 100%; padding: 30px 30px 40px 40px;
+            border-radius: 4px; box-shadow: 0 10px 25px rgba(0,0,0,0.3);
+            position: absolute; top: 0; left: 0; opacity: 0; visibility: hidden;
+            transform: scale(0.9); transition: 0.5s ease; z-index: 5;
+            border-left: 3px double #e74c3c;
+            max-height: 75vh; /* Límite de altura para activar el scroll */
+            overflow-y: auto; /* Activa el scroll vertical */
+        }
+        .snoopy-letter.open { opacity: 1; visibility: visible; transform: scale(1); position: relative; }
+        .snoopy-letter p { font-family: 'Patrick Hand', cursive; font-size: 24px; line-height: 32px; color: #333; margin: 0; }
+        
+        /* Estilos del Scrollbar de la carta */
+        .snoopy-letter::-webkit-scrollbar { width: 8px; }
+        .snoopy-letter::-webkit-scrollbar-track { background: transparent; }
+        .snoopy-letter::-webkit-scrollbar-thumb { background: var(--snoopy-red); border-radius: 10px; }
+
+        .snoopy-heart-img { width: 120px; float: right; margin: 0 0 10px 15px; }
+
+        /* Botón final */
+        .btn-snoopy {
+            background: #d32f2f; color: white; font-family: 'Poppins', sans-serif;
+            font-weight: 600; font-size: 16px; border: none; padding: 12px 25px;
+            border-radius: 25px; margin-top: 30px; cursor: pointer; box-shadow: 0 5px 15px rgba(211, 47, 47, 0.4);
+            width: 100%; transition: 0.2s;
+        }
+        .btn-snoopy:hover { background: #b71c1c; transform: scale(1.05); }
+
+        /* Pantalla Te Amo */
+        .te-amo-screen {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(255, 255, 255, 0.95); display: flex; justify-content: center; align-items: center;
+            border-radius: 4px; z-index: 20; opacity: 0; visibility: hidden; transition: 0.4s;
+        }
+        .te-amo-screen.show { opacity: 1; visibility: visible; }
+        .te-amo-screen h1 { font-family: 'Playfair Display', serif; font-size: 60px; color: var(--snoopy-red); animation: heartbeat 1.5s infinite; text-align: center; }
+        @keyframes heartbeat { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+        
+        /* Corazones Voladores */
+        #hearts-container { position: fixed; top: 0; left: 0; width: 100vw; height: 100vh; pointer-events: none; z-index: 9999; overflow: hidden; }
+        .flying-heart { position: absolute; font-size: 24px; animation: floatHeart linear forwards; opacity: 1; }
+        @keyframes floatHeart { 0% { transform: translateY(100vh) scale(0.5) rotate(0deg); opacity: 1; } 100% { transform: translateY(-10vh) scale(1.5) rotate(360deg); opacity: 0; } }
+    </style>
+</head>
+<body>
+
+    <a href="../index.html" class="back-to-album"><i class="fa-solid fa-arrow-left-long"></i> Volver al Álbum</a>
+
+    <div class="snoopy-container">
+        
+        <!-- PORTADA -->
+        <div class="snoopy-cover" id="snoopy-cover" onclick="openSnoopyLetter()">
+            <img src="..\assets\snoopy1.png" alt="Snoopy Durmiendo" class="snoopy-roof-img">
+            <h2>Top Secret</h2>
+            <p style="color: white; font-family: 'Patrick Hand'; font-size: 20px;">Toca para abrir</p>
+        </div>
+
+        <!-- CARTA CON SCROLL -->
+        <div class="snoopy-letter" id="snoopy-letter">
+            <img src="..\assets\snoopy.png" alt="Snoopy Amor" class="snoopy-heart-img" onerror="this.style.display='none'">
+            
+            <div style="margin-top: 15px;">
+                <p>Fer,</p>
+                <p>Te quiero, pero no solo te quiero por decir que te quiero...</p>
+                <br>
+                <p>Te quiero por tu risa, por tu paciencia, por tu cariño y por tu forma de hacerme sentir especial.</p>
+                <br>
+                <p>Te quiero por cada momento que hemos compartido, por cada abrazo, por cada palabra de aliento y por cada sonrisa que me has regalado.</p>
+                <br>
+                <p>Cada momento a tu lado es increíble, tus abrazos son especiales e ir tomados de la mano cada día es mágico.</p>
+                <br>
+                <p>Aprendamos a querernos cada día un poquito más.</p>
+                <p style="text-align: right; margin-top: 10px;">- Fabi ❤️</p>
+            </div>
+            
+            <button class="btn-snoopy" onclick="triggerTeAmo()">Pulsa aquí...</button>
+        </div>
+        
+        <!-- PANTALLA TE AMO (Movida afuera de snoopy-letter para no cortarse con el scroll) -->
+        <div class="te-amo-screen" id="te-amo-screen">
+            <h1>Te Quiero Mucho ❤️</h1>
+        </div>
+
+    </div>
+
+    <div id="hearts-container"></div>
+
+    <script>
+        const snoopyCover = document.getElementById('snoopy-cover');
+        const snoopyLetter = document.getElementById('snoopy-letter');
+        const teAmoScreen = document.getElementById('te-amo-screen');
+
+        function openSnoopyLetter() {
+            snoopyCover.classList.add('slide-up');
+            setTimeout(() => { snoopyLetter.classList.add('open'); }, 300);
+        }
+
+        function triggerTeAmo() {
+            teAmoScreen.classList.add('show');
+            spawnFlyingHearts();
+        }
+
+        function spawnFlyingHearts() {
+            const container = document.getElementById('hearts-container');
+            container.innerHTML = ''; 
+            for(let i = 0; i < 40; i++) {
+                let heart = document.createElement('div');
+                heart.innerHTML = '❤️';
+                heart.className = 'flying-heart';
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                heart.style.animationDelay = (Math.random() * 1.5) + 's';
+                heart.style.fontSize = (Math.random() * 20 + 20) + 'px';
+                
+                const colors = ['#e74c3c', '#f1c40f', '#e91e63'];
+                heart.style.color = colors[Math.floor(Math.random() * colors.length)];
+                
+                container.appendChild(heart);
+                setTimeout(() => heart.remove(), 6000);
+            }
+        }
+    </script>
+</body>
+</html>
