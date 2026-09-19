@@ -1,0 +1,294 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cita 2: Expedición Salvaje</title>
+    
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🦎</text></svg>">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+    
+    <!-- NUEVAS FUENTES: Outfit (General), Special Elite (Títulos Máquina), Space Mono (Datos), Permanent Marker (Marcador) -->
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;600;800&family=Permanent+Marker&family=Space+Mono:ital,wght@0,400;0,700;1,400&family=Special+Elite&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        :root {
+            --jungle-dark: #0f271d;
+            --jungle-main: #1b4332;
+            --jungle-light: #2d6a4f;
+            --wood-board: #8b5a2b;
+            --paper: #f4e8d3;
+            --ink: #1e272e;
+            --stamp-red: #c0392b;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body { 
+            background-color: var(--jungle-dark); 
+            background-image: radial-gradient(circle at center, var(--jungle-main) 0%, var(--jungle-dark) 100%);
+            font-family: 'Outfit', sans-serif; 
+            overflow-x: hidden; min-height: 100vh; 
+            display: flex; justify-content: center; align-items: center;
+        }
+
+        /* -------------------------------------
+           FONDO DE SELVA INMERSIVO (Con profundidad)
+           ------------------------------------- */
+        .jungle-environment {
+            position: fixed; top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none; z-index: 0; overflow: hidden;
+        }
+        .j-item {
+            position: absolute;
+            color: rgba(255, 255, 255, 0.04);
+            animation: sway 6s ease-in-out infinite alternate;
+        }
+        @keyframes sway { 0% { transform: rotate(-5deg) translateY(0); } 100% { transform: rotate(5deg) translateY(15px); } }
+
+        /* Posicionamiento y filtros para dar efecto de profundidad de campo 3D */
+        .ji-1 { top: -5%; left: -5%; font-size: 350px; color: rgba(0,0,0,0.15); filter: blur(4px); animation-delay: 0s; } /* Hoja gigante borrosa enfrente */
+        .ji-2 { bottom: 10%; right: 5%; font-size: 180px; transform: rotate(-45deg); animation-delay: 1s; } /* Rana fondo */
+        .ji-3 { top: 20%; right: -5%; font-size: 250px; color: rgba(0,0,0,0.2); filter: blur(3px); transform: rotate(-120deg); animation-delay: 2s; } /* Hoja gigante derecha */
+        .ji-4 { bottom: -10%; left: 10%; font-size: 200px; transform: rotate(30deg); animation-delay: 0.5s; } /* Árbol */
+        .ji-5 { top: 15%; left: 25%; font-size: 80px; animation-delay: 1.5s; } /* Araña colgando */
+        .ji-6 { bottom: 25%; right: 25%; font-size: 60px; animation-delay: 2.5s; } /* Mosquito */
+        .ji-7 { top: 40%; left: 85%; font-size: 100px; animation-delay: 3s; } /* Bicho */
+
+        /* -------------------------------------
+           SISTEMA DE VISTAS Y NAVEGACIÓN
+           ------------------------------------- */
+        .view-section { display: none; min-height: 100vh; width: 100vw; animation: fadeInView 0.5s ease-out; flex-direction: column; align-items: center; justify-content: center; position: relative; z-index: 10;}
+        .view-section.active { display: flex; }
+        @keyframes fadeInView { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+
+        .back-to-album { position: absolute; top: 20px; left: 20px; background: rgba(255,255,255,0.9); color: var(--jungle-dark); border: none; padding: 10px 20px; border-radius: 20px; font-family: 'Outfit', sans-serif; font-weight: 800; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.5); z-index: 500; display: flex; align-items: center; gap: 8px; transition: 0.2s; text-decoration: none; }
+        .back-to-album:hover { transform: scale(1.05); background: white; }
+
+        /* -------------------------------------
+           ESTÉTICA DEL CLIPBOARD (TABLA)
+           ------------------------------------- */
+        .clipboard {
+            background: var(--wood-board);
+            width: 340px; min-height: 520px;
+            border-radius: 12px;
+            box-shadow: 0 25px 50px rgba(0,0,0,0.6), inset 0 0 30px rgba(0,0,0,0.4);
+            position: relative; padding: 35px 15px 15px 15px;
+            /* Textura de madera más marcada */
+            background-image: repeating-linear-gradient(0deg, transparent, transparent 8px, rgba(0,0,0,0.08) 8px, rgba(0,0,0,0.08) 16px);
+            margin: 70px auto 20px auto;
+        }
+
+        /* Pinza de metal superior mejorada */
+        .clip-metal {
+            position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
+            width: 120px; height: 45px;
+            background: linear-gradient(to bottom, #bdc3c7, #7f8fa6);
+            border-radius: 6px;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.5), inset 0 2px 5px rgba(255,255,255,0.6);
+            z-index: 5; display: flex; justify-content: center; align-items: center;
+        }
+        .clip-metal::after { content: ''; width: 80px; height: 10px; background: #2f3640; border-radius: 5px; box-shadow: inset 0 2px 4px rgba(0,0,0,0.9); }
+        .clip-hole { position: absolute; top: 5px; left: 50%; transform: translateX(-50%); width: 12px; height: 12px; background: var(--jungle-main); border-radius: 50%; box-shadow: inset 0 3px 5px rgba(0,0,0,0.5); }
+
+        /* Hoja de Papel Desgastado */
+        .paper {
+            background: var(--paper);
+            width: 100%; height: 100%; border-radius: 2px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            padding: 30px 20px; position: relative;
+            /* Líneas de cuadrícula sutiles */
+            background-image: 
+                linear-gradient(rgba(44, 62, 80, 0.1) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(44, 62, 80, 0.1) 1px, transparent 1px);
+            background-size: 20px 20px;
+        }
+
+        .screen { display: none; flex-direction: column; align-items: center; text-align: center; height: 100%; animation: fadeInView 0.5s ease-out; }
+        .screen.active { display: flex; }
+
+        /* -------------------------------------
+           NUEVA TIPOGRAFÍA
+           ------------------------------------- */
+        /* Título estilo máquina de escribir vieja */
+        h1.expedition-title { font-family: 'Special Elite', cursive; color: var(--jungle-dark); font-size: 28px; margin-bottom: 5px; line-height: 1.1; font-weight: 400; text-shadow: 1px 1px 0px rgba(0,0,0,0.1); }
+        
+        /* Sello rojo */
+        .stamp { font-family: 'Space Mono', monospace; color: var(--stamp-red); font-weight: 700; border: 3px solid var(--stamp-red); padding: 5px 12px; border-radius: 4px; transform: rotate(-8deg); margin: 15px 0; letter-spacing: 2px; font-size: 18px; opacity: 0.8; }
+        
+        /* Texto tipo marcador Sharpie */
+        .handwritten { font-family: 'Permanent Marker', cursive; font-size: 18px; color: #34495e; line-height: 1.3; margin-bottom: 25px; transform: rotate(-1deg); }
+
+        /* Detalles técnicos de la misión */
+        .mission-details { font-family: 'Space Mono', monospace; color: var(--ink); text-align: left; width: 100%; margin: 15px 0; font-size: 12.5px; background: rgba(255,255,255,0.7); padding: 15px; border-radius: 4px; border-left: 4px solid var(--jungle-light); box-shadow: 2px 2px 5px rgba(0,0,0,0.05); }
+        .mission-details strong { color: var(--jungle-dark); font-weight: 700; }
+        .mission-details p { margin-bottom: 5px; }
+        .mission-details ul { margin-left: 15px; margin-top: 10px; list-style-type: square; }
+        .mission-details li { margin-bottom: 10px; line-height: 1.4; }
+
+        /* Botón del Mapa (Google Maps) */
+        .btn-map { background: #e1b12c; color: #1e272e; text-decoration: none; padding: 12px 15px; border-radius: 4px; font-family: 'Outfit', sans-serif; font-weight: 800; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; margin-top: 10px; box-shadow: 0 4px 6px rgba(0,0,0,0.2); transition: 0.2s; border: 1px solid #c23616; }
+        .btn-map:hover { background: #fbc531; transform: translateY(-3px); box-shadow: 0 6px 10px rgba(0,0,0,0.3); }
+
+        /* Botones de acción general */
+        .btn-group { width: 100%; display: flex; gap: 10px; margin-top: auto; }
+        .btn-exp { font-family: 'Outfit', sans-serif; font-weight: 800; text-transform: uppercase; letter-spacing: 1px; border: none; padding: 14px; border-radius: 4px; cursor: pointer; transition: all 0.2s ease; display: flex; justify-content: center; align-items: center; gap: 8px; width: 100%; font-size: 13px; }
+        .btn-exp:active { transform: scale(0.96); }
+        
+        .btn-primary { background: var(--jungle-dark); color: white; border: 1px solid #000; box-shadow: 3px 3px 0px rgba(0,0,0,0.2); }
+        .btn-primary:hover { background: var(--jungle-main); transform: translate(-2px, -2px); box-shadow: 5px 5px 0px rgba(0,0,0,0.2); }
+        .btn-secondary { background: #dfe4ea; color: var(--ink); border: 1px solid #a4b0be; }
+        
+        .btn-yes { background: var(--jungle-dark); color: white; font-size: 15px; border: 2px solid #000; box-shadow: 4px 4px 0px rgba(0,0,0,0.2); animation: pulseBtn 2s infinite; }
+        @keyframes pulseBtn { 0% { transform: scale(1); } 50% { transform: scale(1.05); } 100% { transform: scale(1); } }
+        
+        .btn-no { background: transparent; color: #a4b0be; border: 2px dashed #a4b0be; }
+        .implode { animation: popOut 0.3s forwards; pointer-events: none; }
+        @keyframes popOut { 40% { transform: scale(1.05); } 100% { transform: scale(0); opacity: 0; width: 0; padding: 0; border: none; margin: 0; } }
+        
+        .error-msg { display: none; color: #fff; background: var(--stamp-red); padding: 12px; border-radius: 4px; font-family: 'Outfit', sans-serif; font-size: 13px; width: 100%; margin-top: 15px; font-weight: 800; text-transform: uppercase;}
+
+        .nature-icon { font-size: 65px; color: var(--jungle-light); margin-bottom: 10px; animation: floatIcon 3s ease-in-out infinite; filter: drop-shadow(2px 4px 6px rgba(0,0,0,0.1)); }
+        @keyframes floatIcon { 0%, 100% { transform: translateY(0) rotate(-5deg); } 50% { transform: translateY(-8px) rotate(5deg); } }
+
+        /* Pantalla Final de Éxito */
+        .success-overlay { display: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(244, 232, 211, 0.95); z-index: 100; flex-direction: column; justify-content: center; align-items: center; border-radius: 4px; text-align: center; padding: 20px; animation: fadeInView 0.4s ease; border: 5px solid var(--jungle-dark); }
+    </style>
+</head>
+<body>
+
+    <!-- FONDO INMERSIVO DE SELVA -->
+    <div class="jungle-environment">
+        <i class="fa-solid fa-leaf j-item ji-1"></i>
+        <i class="fa-solid fa-frog j-item ji-2"></i>
+        <i class="fa-brands fa-pagelines j-item ji-3"></i>
+        <i class="fa-solid fa-tree j-item ji-4"></i>
+        <i class="fa-solid fa-spider j-item ji-5"></i>
+        <i class="fa-solid fa-mosquito j-item ji-6"></i>
+        <i class="fa-solid fa-bug j-item ji-7"></i>
+    </div>
+
+    <div id="expedition-view" class="view-section active">
+        <a href="../index.html" class="back-to-album"><i class="fa-solid fa-arrow-left-long"></i> Volver al Álbum</a>
+        
+        <div class="clipboard">
+            <div class="clip-metal">
+                <div class="clip-hole"></div>
+            </div>
+            
+            <div class="paper">
+                <!-- PANTALLA 1: PORTADA EXPEDICIÓN -->
+                <div class="screen active" id="screen-1">
+                    <i class="fa-solid fa-compass nature-icon"></i>
+                    <h1 class="expedition-title">Nueva Misión</h1>
+                    <div class="stamp">TOP SECRET</div>
+                    <p class="handwritten">
+                        Coordenadas desbloqueadas. Serpientes, lagartos, animales exóticos y buena compañía.
+                    </p>
+                    <div class="btn-group">
+                        <button class="btn-exp btn-primary" onclick="goToScreen(2)">Leer Expediente <i class="fa-solid fa-magnifying-glass"></i></button>
+                    </div>
+                </div>
+
+                <!-- PANTALLA 2: DETALLES DE LA MISIÓN -->
+                <div class="screen" id="screen-2">
+                    <h1 class="expedition-title" style="font-size: 24px; text-decoration: underline; margin-bottom: 10px;">Hoja de Ruta</h1>
+                    
+                    <div class="mission-details">
+                        <p><strong>OBJETIVO:</strong> Cita Num. 02</p>
+                        <p><strong>DÍA:</strong> Domingo 20 Septiembre</p>
+                        <p><strong>HORA:</strong> 1:00 PM</p>
+                        <ul>
+                            <li><strong>Fase 1:</strong> Exploración animal en el Museo Viviente. <i class="fa-solid fa-snake"></i></li>
+                            <li><strong>Fase 2:</strong> Comida rica. <i class="fa-solid fa-burger"></i></li>
+                        </ul>
+                        
+                        <div style="text-align: center; margin-top: 15px;">
+                            <a href="https://maps.app.goo.gl/HTaAFuhg9irfHVQbA?g_st=ac" target="_blank" class="btn-map">
+                                <i class="fa-solid fa-map-location-dot"></i> Ubicación: Museo Viviente
+                            </a>
+                        </div>
+                    </div>
+
+                    <div class="btn-group">
+                        <button class="btn-exp btn-secondary" onclick="goToScreen(1)"><i class="fa-solid fa-arrow-left"></i></button>
+                        <button class="btn-exp btn-primary" onclick="goToScreen(3)">Siguiente <i class="fa-solid fa-arrow-right"></i></button>
+                    </div>
+                </div>
+
+                <!-- PANTALLA 3: LA PREGUNTA -->
+                <div class="screen" id="screen-3">
+                    <h1 class="expedition-title" style="font-size: 26px;">¿Aceptas el reto?</h1>
+                    <i class="fa-solid fa-binoculars nature-icon" style="margin: 25px 0;"></i>
+                    
+                    <div style="width: 100%; display: flex; gap: 10px; margin-top: auto;">
+                        <button class="btn-exp btn-yes" id="btnYes">SÍ, ESTOY LISTA 🤠</button>
+                        <button class="btn-exp btn-no" id="btnNo">No</button>
+                    </div>
+                    
+                    <div class="error-msg" id="errorMsg">
+                        <i class="fa-solid fa-skull-crossbones"></i> Opción venenosa. Los exploradores no se rinden. Presiona "SÍ".
+                    </div>
+                    
+                    <button class="btn-exp btn-secondary" style="margin-top: 15px;" onclick="goToScreen(2)">Repasar Plan</button>
+                </div>
+
+                <!-- PANTALLA 4: ÉXITO -->
+                <div class="success-overlay" id="success-screen">
+                    <h2 style="font-family: 'Special Elite', cursive; font-size: 32px; color: var(--jungle-dark); margin-bottom: 15px; border-bottom: 3px solid var(--jungle-dark); padding-bottom: 10px;">¡Aventura Confirmada!</h2>
+                    
+                    <div style="display: flex; gap: 15px; margin: 20px 0;">
+                        <i class="fa-solid fa-leaf" style="font-size: 35px; color: var(--jungle-main); border: 2px solid var(--jungle-main); padding: 15px; border-radius: 50%;"></i>
+                        <i class="fa-solid fa-utensils" style="font-size: 35px; color: #e1b12c; border: 2px solid #e1b12c; padding: 15px; border-radius: 50%;"></i>
+                    </div>
+                    
+                    <p class="handwritten" style="font-size: 26px; transform: rotate(0);">
+                        Prepara tu mejor outfit y tu cámara.<br>¡Nos vemos allá!
+                    </p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function goToScreen(num) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.getElementById('screen-' + num).classList.add('active');
+        }
+
+        document.getElementById('btnNo').addEventListener('click', function() {
+            this.classList.add('implode');
+            setTimeout(() => { document.getElementById('errorMsg').style.display = 'block'; }, 250); 
+        });
+
+        document.getElementById('btnYes').addEventListener('click', () => {
+            document.getElementById('success-screen').style.display = 'flex';
+            
+            var duration = 3 * 1000; 
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 25, spread: 360, ticks: 60, zIndex: 2000 }; 
+            
+            function randomInRange(min, max) { return Math.random() * (max - min) + min; }
+            
+            var interval = setInterval(function() {
+                var timeLeft = animationEnd - Date.now();
+                if (timeLeft <= 0) return clearInterval(interval);
+                var particleCount = 50 * (timeLeft / duration);
+                
+                // Colores tipo safari/exploración
+                confetti(Object.assign({}, defaults, { 
+                    particleCount, 
+                    colors: ['#1b4332', '#2d6a4f', '#e1b12c', '#8b5a2b', '#2c3e50'], 
+                    origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } 
+                }));
+                confetti(Object.assign({}, defaults, { 
+                    particleCount, 
+                    colors: ['#1b4332', '#2d6a4f', '#e1b12c', '#8b5a2b', '#2c3e50'], 
+                    origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } 
+                }));
+            }, 250);
+        });
+    </script>
+</body>
+</html>
